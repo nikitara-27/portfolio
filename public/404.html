@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Niki Taradash</title>
+    <script type="text/javascript">
+      // Single Page Apps for GitHub Pages
+      // https://github.com/rafgraph/spa-github-pages
+      //
+      // GitHub Pages has no server-side rewrite, so it serves this file for
+      // any URL that isn't a real static file — e.g. a direct link or
+      // refresh on /portfolio/about. This encodes the real path into a
+      // query string and redirects to the site root, where the script in
+      // index.html decodes it back before React Router ever sees it.
+      //
+      // pathSegmentsToKeep: 1 — this is a GitHub Pages *project* site
+      // (served under /portfolio/, not the domain root), so the first path
+      // segment is the repo name itself, not part of the app's own routes,
+      // and must be preserved rather than encoded away.
+      var pathSegmentsToKeep = 1
+
+      var l = window.location
+      l.replace(
+        l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+        l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + '/?/' +
+        l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/').replace(/&/g, '~and~') +
+        (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+        l.hash
+      )
+    </script>
+  </head>
+  <body></body>
+</html>

@@ -6,7 +6,9 @@ import App from './App.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <BrowserRouter>
+    {/* Matches vite.config.js's base ('/portfolio/') — GitHub Pages serves
+        this project site from that subpath, not the domain root. */}
+    <BrowserRouter basename="/portfolio">
       <App />
     </BrowserRouter>
   </StrictMode>,
