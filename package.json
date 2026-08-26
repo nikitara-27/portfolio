@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://nikitara-27.github.io/portfolio",
+  "homepage": "https://nikitaradash.com",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
