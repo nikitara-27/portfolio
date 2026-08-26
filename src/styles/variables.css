@@ -1,0 +1,68 @@
+:root {
+  /* Color palette */
+  --color-bg: #ffffff;
+  --color-text: #000000;
+  --color-muted: #8a806e;
+  --color-divider: #ded9d1;
+  /* Same color as --color-divider, as separate r/g/b components — needed
+     wherever it's used at a fractional alpha (rgba()/color-mix() can't take
+     a hex custom property and vary its opacity), e.g. WorkCard's hover-fill
+     animation and Nav's active-link background. */
+  --color-divider-rgb: 222, 217, 209;
+  --color-accent-green: #425c2f;
+  --color-accent-green-hover: #607d4b;
+
+  /* Type family */
+  --font-family: 'Montserrat', sans-serif;
+  --font-family-body: 'Open Sans', sans-serif;
+  --font-weight-normal: 400;
+  --font-weight-semibold: 600;
+
+  /* Type scale */
+  --font-size-h1: 3rem; /* 48px */
+  --font-size-h2: 1.5rem; /* 24px */
+  --font-size-h3: 1.125rem; /* 18px */
+  --font-size-h4: 0.9375rem; /* 15px */
+  --font-size-body: 1rem; /* 16px */
+  --font-size-body-m: 0.75rem; /* 12px */
+  --font-size-body-s: 0.625rem; /* 10px */
+  --font-size-body-italic: 1.25rem; /* 20px */
+
+  /* One-off decorative sizes, kept as tokens rather than inline values even
+     though they aren't part of the shared type scale above. */
+  --font-size-sticker-bubble: 0.9rem; /* 14.4px */
+}
+
+/* Tablet type scale — desktop sizes above scale down at this breakpoint;
+   body/body-m/body-s are unchanged so they're omitted here. Applied as a
+   ceiling (max-width) rather than a min/max range so narrower (mobile)
+   viewports inherit it too, instead of falling back to full desktop-size
+   headers below 768px. */
+@media (max-width: 1024px) {
+  :root {
+    --font-size-h1: 2.25rem; /* 36px */
+    --font-size-h2: 1.25rem; /* 20px */
+    --font-size-h3: 1rem; /* 16px */
+    --font-size-h4: 0.875rem; /* 14px */
+    --font-size-body-italic: 1.125rem; /* 18px */
+  }
+}
+
+/* Mobile type scale — scales down further from the tablet values above.
+   body/body-m are unchanged so they're omitted; body-s is the one
+   exception that goes up (10px tablet → 11px mobile), not down. Matches
+   the codebase's existing mobile breakpoint (720px, e.g. Footer/Hero/
+   WorkCard's own @media blocks) rather than introducing a new one — as a
+   subset of the ≤1024px tablet range above and declared after it, this
+   naturally wins the cascade at mobile widths without needing higher
+   specificity. */
+@media (max-width: 720px) {
+  :root {
+    --font-size-h1: 1.75rem; /* 28px */
+    --font-size-h2: 1.125rem; /* 18px */
+    --font-size-h3: 0.9375rem; /* 15px */
+    --font-size-h4: 0.8125rem; /* 13px */
+    --font-size-body-italic: 1rem; /* 16px */
+    --font-size-body-s: 0.6875rem; /* 11px */
+  }
+}

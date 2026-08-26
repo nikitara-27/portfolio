@@ -1,0 +1,230 @@
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1rem 2rem;
+  /* Frosted-glass: a light, semi-transparent tint (not full white) so the
+     sky animation/page content stays visible but softened, plus a blur so
+     it reads as glass rather than a plain tinted overlay. .opaque (other
+     pages) overrides background back to solid — backdrop-filter still
+     applies there too, but has no visible effect once nothing shows
+     through, so it's harmless left on. */
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.opaque {
+  background: var(--color-bg);
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.homeButton {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.iconButton {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #f5f1ea;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text);
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.iconButton:hover {
+  background: var(--color-accent-green);
+  color: #ffffff;
+}
+
+.iconButton svg {
+  width: 15px;
+  height: 15px;
+}
+
+.wordmark {
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-h4);
+  color: var(--color-text);
+  white-space: nowrap;
+}
+
+.links {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.link {
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-h4);
+  color: var(--color-text);
+  text-decoration: none;
+  padding: 0.25rem 0.6rem;
+  margin: -0.25rem -0.6rem;
+  border-radius: 999px;
+  background: transparent;
+  transition: background-color 0.2s ease;
+}
+
+.link:hover,
+.link.active {
+  background: rgba(var(--color-divider-rgb), 0.5);
+}
+
+.hamburger {
+  display: none;
+  position: relative;
+  z-index: 11;
+  width: 26px;
+  height: 20px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.hamburgerLine {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--color-text);
+  transition:
+    transform 0.25s ease,
+    opacity 0.25s ease,
+    top 0.25s ease;
+}
+
+.hamburgerLine:nth-child(1) {
+  top: 0;
+}
+
+.hamburgerLine:nth-child(2) {
+  top: 9px;
+}
+
+.hamburgerLine:nth-child(3) {
+  top: 18px;
+}
+
+.hamburgerOpen .hamburgerLine:nth-child(1) {
+  top: 9px;
+  transform: rotate(45deg);
+}
+
+.hamburgerOpen .hamburgerLine:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburgerOpen .hamburgerLine:nth-child(3) {
+  top: 9px;
+  transform: rotate(-45deg);
+}
+
+.mobileMenu {
+  display: none;
+}
+
+@media (max-width: 720px) {
+  .links {
+    display: none;
+  }
+
+  .hamburger {
+    display: block;
+  }
+
+  /* Hides the header's own content while the menu is open — visibility
+     (not display: none) keeps its layout space intact, which is what
+     keeps .hamburger pinned to the exact same top-right spot via .nav's
+     own justify-content: space-between, regardless of menu state. */
+  .navMenuOpen .left {
+    visibility: hidden;
+  }
+
+  /* backdrop-filter on .nav (like transform/filter) establishes a new
+     containing block for position: fixed descendants — without dropping
+     it here, .mobileMenu's inset: 0 resolves against .nav's own ~66px
+     box instead of the real viewport, capping the "full-screen" panel to
+     the header's height. Harmless to drop while open: .mobileMenu's own
+     background fully covers .nav visually at that point anyway. */
+  .navMenuOpen {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  /* Full-screen overlay instead of a dropdown — position: fixed + inset: 0
+     covers the header too. z-index: 9 sits below .hamburger's 11, so the
+     X stays visible and clickable on top of it. */
+  .mobileMenu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    inset: 0;
+    z-index: 9;
+    gap: 1rem;
+    background: rgba(var(--color-divider-rgb), 0.88);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    opacity: 0;
+    transform: scale(0.96);
+    pointer-events: none;
+    transition:
+      opacity 0.25s ease,
+      transform 0.25s ease;
+  }
+
+  .mobileMenuOpen {
+    opacity: 1;
+    transform: scale(1);
+    pointer-events: auto;
+  }
+
+  .mobileLink {
+    font-family: var(--font-family);
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-size-h3);
+    color: var(--color-text);
+    text-decoration: none;
+    padding: 0.85rem 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  .mobileLink:last-child {
+    border-bottom: none;
+  }
+
+  .mobileLinkActive {
+    color: var(--color-accent-green);
+  }
+}

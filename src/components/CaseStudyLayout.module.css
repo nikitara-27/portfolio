@@ -1,0 +1,250 @@
+.page {
+  position: relative;
+  background: var(--color-bg);
+  padding: 150px 2rem 120px;
+}
+
+.container {
+  /* max-width is the pre-JS-measurement fallback (and a hard ceiling);
+     CaseStudyLayout overrides this with an explicit inline `width` once
+     the title's rendered width is known, which every child below (meta,
+     dividers, section nav, hero, and each section's own content) then
+     matches automatically by filling 100% of this box. */
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* Holds the hidden title clone CaseStudyLayout measures .container's width
+   from. Shares .container's own max-width (900px) so it measures the same
+   available space the real title would get before that inline width is
+   applied — but never receives that inline width itself, since it isn't
+   the thing being resized. */
+.measureContainer {
+  max-width: 900px;
+  margin: 0 auto;
+  position: absolute;
+  visibility: hidden;
+  height: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Floating table of contents — pinned to the page edge like the reference
+   design, independent of the centered content column. Only shown once the
+   viewport is wide enough that it can't collide with that column. */
+.sideNav {
+  display: none;
+}
+
+@media (min-width: 1400px) {
+  .sideNav {
+    display: block;
+    /* Fixed positioning keeps it in view as the page scrolls; pinning to
+       the same top offset as the eyebrow/title (.page's own padding-top)
+       starts it level with the page header instead of stranded mid-page. */
+    position: fixed;
+    top: 150px;
+    left: 2.5rem;
+    width: 160px;
+  }
+}
+
+.sideNavLabel {
+  font-family: var(--font-family-body);
+  font-weight: var(--font-weight-normal);
+  font-size: var(--font-size-body-s);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  margin: 0 0 0.75rem;
+}
+
+.sideNavList {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0 0.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.sideNavItem {
+  position: relative;
+}
+
+/* Vertical line marking the in-view section, sitting in the list's left
+   padding gutter so it doesn't shift the text. */
+.sideNavItem::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -0.6rem;
+  width: 2px;
+  background: var(--color-text);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.sideNavItemActive::before {
+  opacity: 1;
+}
+
+.sideNavLink {
+  display: inline-block;
+  font-family: var(--font-family-body);
+  font-weight: var(--font-weight-normal);
+  font-size: var(--font-size-body-m);
+  color: var(--color-muted);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.sideNavLink:hover {
+  color: var(--color-text);
+}
+
+.sideNavLinkActive {
+  color: var(--color-text);
+}
+
+.eyebrow {
+  font-family: var(--font-family-body);
+  font-weight: var(--font-weight-normal);
+  font-size: var(--font-size-body);
+  color: var(--color-muted);
+  margin: 0 0 0.75rem;
+}
+
+.title {
+  color: var(--color-text);
+  /* Scales continuously with the viewport (rather than in discrete
+     breakpoint steps) so it shrinks in the same proportion as the content
+     column below it — keeping each manual <br> line (see
+     HomewardCaseStudy.jsx) from soft-wrapping further and stranding a
+     single word on its own line, at any width, not just a few tested ones. */
+  font-size: clamp(0.75rem, 5vw, var(--font-size-h1));
+  /* Shrink-wraps to its longest line (rather than stretching the full
+     content column) so its rendered width can be measured and mirrored
+     onto the content column itself (see CaseStudyLayout.jsx), aligning
+     every element below it to the same edge. */
+  width: fit-content;
+  max-width: 100%;
+  margin-bottom: 2rem;
+}
+
+.metaGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  row-gap: 1.5rem;
+  column-gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.metaLabel {
+  font-family: var(--font-family-body);
+  font-weight: var(--font-weight-normal);
+  font-size: var(--font-size-body-m);
+  color: var(--color-muted);
+  margin: 0 0 0.3rem;
+}
+
+.metaValue {
+  font-family: var(--font-family-body);
+  font-weight: var(--font-weight-normal);
+  font-size: var(--font-size-body-m);
+  color: var(--color-muted);
+  margin: 0;
+}
+
+.linksBlock {
+  margin-bottom: 2rem;
+}
+
+.metaLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-family: var(--font-family-body);
+  font-weight: var(--font-weight-normal);
+  font-size: var(--font-size-body-m);
+  color: var(--color-muted);
+  text-decoration: none;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  background-size: 0 1px;
+  transition:
+    background-size 0.2s ease,
+    color 0.2s ease;
+}
+
+.metaLink:hover {
+  color: var(--color-accent-green);
+  background-size: 100% 1px;
+}
+
+.metaLinkArrow {
+  width: 0.9em;
+  height: 0.9em;
+  flex-shrink: 0;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid var(--color-divider);
+  margin: 0 0 2rem;
+}
+
+.sectionNav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.75rem;
+  margin-bottom: 2rem;
+}
+
+.sectionNavLink {
+  font-family: var(--font-family-body);
+  font-weight: var(--font-weight-normal);
+  font-size: var(--font-size-body);
+  color: var(--color-muted);
+  text-decoration: none;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  background-size: 0 1px;
+  transition:
+    background-size 0.2s ease,
+    color 0.2s ease;
+}
+
+.sectionNavLink:hover {
+  color: var(--color-accent-green);
+  background-size: 100% 1px;
+}
+
+.hero {
+  width: 100%;
+  height: auto;
+  /* Reserves the image's real space before it loads (it's a large asset)
+     so the nav/section links above and below it don't jump once it does. */
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 4rem;
+  background: var(--color-divider);
+}
+
+.section {
+  scroll-margin-top: 100px;
+  margin-bottom: 4rem;
+}
+
+.section:last-child {
+  margin-bottom: 0;
+}
+
+.sectionHeading {
+  color: var(--color-text);
+  margin-bottom: 1.5rem;
+}

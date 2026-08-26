@@ -1,0 +1,24 @@
+/*
+  Plain (non-module) CSS on purpose: CursorEffects.jsx sets
+  `animationName: cursor-star-life` via inline styles built from JS.
+  A .module.css file would hash the keyframe name, so the inline-style
+  reference would no longer match the compiled CSS.
+*/
+
+@keyframes cursor-star-life {
+  0% {
+    opacity: 0;
+    scale: 0.7;
+  }
+  6% {
+    opacity: var(--max-op);
+    scale: 1.15;
+  }
+  18% {
+    scale: 1.05;
+  }
+  100% {
+    opacity: 0;
+    scale: 0.75;
+  }
+}

@@ -1,0 +1,16 @@
+.illustration {
+  position: absolute;
+  z-index: 0;
+  cursor: pointer;
+  will-change: transform;
+  transform-origin: 50% 100%;
+}
+
+.img {
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+  filter: drop-shadow(2.2px 0 0 #fff) drop-shadow(-2.2px 0 0 #fff) drop-shadow(0 2.2px 0 #fff) drop-shadow(0 -2.2px 0 #fff)
+    drop-shadow(0 6px 14px rgba(0, 0, 0, 0.12));
+}

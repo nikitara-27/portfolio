@@ -1,0 +1,268 @@
+.card {
+  position: relative;
+  background: rgba(var(--color-divider-rgb), 0);
+  border: 2px solid var(--color-divider);
+  border-radius: 28px;
+  padding: 1rem 1.75rem 1.75rem;
+  /* Shortened from 1.08/1 — the text block above the media area was
+     tightened (padding/margins reduced), and since .media fills whatever
+     space remains (flex: 1) within this fixed ratio, simply tightening the
+     text block would have left the freed-up space to the image instead of
+     shortening the card overall. This ratio is tuned so the media box comes
+     out the exact same size it was before any of that tightening. */
+  aspect-ratio: 1.185 / 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  /* Card can render as either a plain <article> or a react-router <Link>
+     (when the project has a case-study page to open) — reset the anchor's
+     default blue/underline so it looks identical either way. */
+  color: inherit;
+  text-decoration: none;
+  transition: transform 0.2s ease-out;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .card:hover {
+    transform: scale(1.025);
+    z-index: 1;
+  }
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0.75rem;
+}
+
+.collapseTop {
+  margin-bottom: 0.25rem;
+}
+
+.cardHeader {
+  display: flex;
+  /* baseline (not flex-start) so "Team" lines up with the text baseline
+     inside the pills rather than their top edge — the pills' padding
+     otherwise pushes their text noticeably lower than flex-start would
+     suggest. */
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.tag {
+  background: var(--color-accent-green);
+  color: #ffffff;
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-body-m);
+  font-weight: var(--font-weight-normal);
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+@media (max-width: 1024px) {
+  .tagHiddenCompact {
+    display: none;
+  }
+}
+
+.team {
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-body-s);
+  color: rgba(0, 0, 0, 0.4);
+  flex-shrink: 0;
+}
+
+.title {
+  margin-top: -0.5rem;
+  margin-bottom: 0.25rem;
+  /* Reserves space for two lines regardless of actual wrap, so the title
+     block is the same height on every card instead of depending on how much
+     that particular title happens to wrap. Text is bottom-aligned within
+     that reserved space so a one-line title still sits flush against the
+     description instead of leaving blank space above it. */
+  min-height: 3em;
+  display: flex;
+  align-items: flex-end;
+}
+
+.description {
+  color: #747474;
+}
+
+.media {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+.mediaLayer {
+  position: absolute;
+  inset: 0;
+}
+
+.mediaLayer img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: var(--color-divider);
+}
+
+.mediaPreview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 0.5rem;
+  background: #1c1c1c;
+  color: #ffffff;
+  opacity: 0;
+}
+
+.previewIcon {
+  width: 28px;
+  height: 28px;
+}
+
+.previewVideo {
+  /* Absolutely stacked (not laid out by .mediaPreview's flex) — two of these
+     overlap exactly, one buffering the next clip behind the visible one, and
+     a transition is just flipping which one's opacity is 1. */
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  /* cover, matching the static image — the box stays a fixed size shared by
+     every card in the grid, and the clips (~1.39:1) are narrower/taller than
+     this box (~1.63:1), so filling it completely without stretching means
+     cropping the clip's top/bottom margin (the only axis with excess once
+     the box's own width is matched), not its sides. */
+  object-fit: cover;
+}
+
+.previewLabel {
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-body-s);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.scrim {
+  display: none;
+}
+
+/* Tablet keeps desktop's structural format (content on top, media below,
+   no #DED9D1 panel) — only compacts the text block's own sizing, since a
+   fixed content-block size (padding/gaps/title reservation) that doesn't
+   shrink with the narrower tablet card eats a disproportionate share of
+   the fixed aspect-ratio box, squeezing the image smaller than intended. */
+@media (max-width: 1024px) and (min-width: 721px) {
+  .card {
+    padding: 0.75rem 1.25rem 1.25rem;
+  }
+
+  .content {
+    margin-bottom: 0.5rem;
+  }
+
+  .collapseTop {
+    margin-bottom: 0.15rem;
+  }
+
+  .cardHeader {
+    gap: 0.65rem;
+  }
+
+  .tags {
+    gap: 0.3rem;
+  }
+
+  .tag {
+    padding: 0.2rem 0.55rem;
+  }
+
+  .title {
+    margin-top: -0.3rem;
+    margin-bottom: 0.15rem;
+    min-height: 2.1em;
+    font-size: 0.9375rem;
+  }
+
+  p.description {
+    line-height: 1.3;
+  }
+}
+
+/* Below the breakpoint there's no hover, so the card switches to a
+   stacked, non-overlay layout instead of the desktop hover's
+   collapse/expand routine: media on top, and a solid-fill info panel
+   below it — media/content keep the desktop DOM order (content, then
+   media) but visually swap via `order` so the image reads first. */
+@media (max-width: 720px) {
+  .card {
+    aspect-ratio: 2 / 1;
+    padding: 0;
+  }
+
+  .media {
+    order: 1;
+    border-radius: 0;
+  }
+
+  .content {
+    order: 2;
+    background: var(--color-divider);
+    padding: 0.625rem 0.75rem 0.5rem;
+    gap: 0.3rem;
+    margin-bottom: 0;
+  }
+
+  .collapseTop {
+    margin-bottom: 0;
+  }
+
+  .cardHeader {
+    gap: 0.5rem;
+  }
+
+  .tags {
+    gap: 0.3rem;
+  }
+
+  .tag {
+    padding: 0.15rem 0.5rem;
+  }
+
+  .title {
+    margin-top: 0;
+    margin-bottom: 0;
+    min-height: auto;
+    font-size: 0.8125rem;
+  }
+
+  /* Element + class beats the shared body-s utility class's own font-size
+     in the cascade regardless of import order — needed since body-s is
+     shared by every other body-s usage on the site and shouldn't shrink
+     globally just for this much smaller card. */
+  p.description {
+    font-size: 0.625rem;
+    line-height: 1.35;
+  }
+
+  /* The always-visible text block is bottom-anchored here, so keep the
+     placeholder's icon/label clear of it by pinning them near the top
+     instead of dead-center. */
+  .mediaPreview {
+    justify-content: flex-start;
+    padding-top: 2.5rem;
+  }
+}

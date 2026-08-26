@@ -1,0 +1,105 @@
+.play {
+  position: relative;
+  min-height: 100vh;
+  background: var(--color-bg);
+  padding: 150px 2rem 120px;
+}
+
+.inner {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.title {
+  text-align: left;
+}
+
+.entry {
+  position: relative;
+  margin-top: 3rem;
+  padding: 2rem;
+  /* No prior Play entry card to match against (the section was just reset
+     to bare header) — this borrows WorkCard's bordered/rounded card
+     language (border + radius, no fill) as the site's established "card"
+     vocabulary, so this reads consistent with the rest of the site. */
+  border: 1px solid var(--color-divider);
+  border-radius: 24px;
+  background: var(--color-bg);
+}
+
+.entryMeta {
+  margin-top: 1.5rem;
+}
+
+/* Matches the case-study TagRow pill (CaseStudyContent.module.css) rather
+   than WorkCard's green grid-card tag — this sits in body content, not a
+   link-card header. */
+.tag {
+  display: inline-block;
+  background: #f5f1ea;
+  color: var(--color-text);
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.entryTitle {
+  margin-top: 0.75rem;
+}
+
+.accordionRow {
+  display: flex;
+  /* Explicit, not relying on the flex default — this codebase has hit this
+     exact gotcha before (grid/flex items silently falling back to
+     content-based height instead of stretching). Without it here, items
+     were shrinking below the row's 420px, leaving .entry's white card
+     background visible above/below the image as a "border". */
+  align-items: stretch;
+  /* Placeholder height — tune once the real photos are in; 420px is a
+     rough landscape-strip guess for this row's ~836px rendered width
+     (.inner's 900px minus this card's 2rem padding each side). */
+  height: 420px;
+  border-radius: 18px;
+  overflow: hidden;
+  /* No gap between slices — reads as one continuous accordion strip rather
+     than a gapped grid, unlike the rest of the Play section's tile grid. */
+}
+
+.accordionItem {
+  position: relative;
+  /* Explicit, not just inherited via stretch — makes this a *definite*
+     height so the absolutely-positioned image's height: 100% resolves
+     reliably against it instead of depending on the flex algorithm alone. */
+  height: 100%;
+  flex-basis: 0;
+  flex-shrink: 1;
+  min-width: 0;
+  overflow: hidden;
+  cursor: pointer;
+  transition: flex-grow 0.35s ease-in-out;
+  /* Adjacent items are each their own overflow:hidden clip region — the box
+     math lines them up exactly, but two separately-rasterized clipped
+     layers can still show a hairline seam between them from sub-pixel
+     rounding during compositing. A tiny overlap hides it; the last item's
+     overlap extends past the row's own edge, which the row's overflow:
+     hidden trims harmlessly. */
+  margin-right: -1px;
+}
+
+.accordionMedia {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: auto;
+  /* Overrides global.css's img { max-width: 100% } reset — without this,
+     the browser would clamp the image back down to its (narrow) container
+     width and reintroduce the exact rescale-on-hover this is fixing. */
+  max-width: none;
+  display: block;
+}
+
+@media (max-width: 720px) {
+  .accordionRow {
+    height: 280px;
+  }
+}

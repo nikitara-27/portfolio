@@ -1,0 +1,69 @@
+/*
+  Plain (non-module) CSS on purpose: BackgroundAnimation.jsx sets
+  `animation: star-twinkle ...` etc. via inline styles built from JS
+  strings. A .module.css file would hash these keyframe names, so the
+  inline-style references would no longer match the compiled CSS and the
+  animations would silently fail to run.
+*/
+
+@keyframes sun-pulse {
+  0% {
+    opacity: 0.55;
+    scale: 1;
+  }
+  50% {
+    opacity: 0.75;
+    scale: 1.06;
+  }
+  100% {
+    opacity: 0.55;
+    scale: 1;
+  }
+}
+
+@keyframes cloud-loop {
+  0% {
+    translate: -60vw 0;
+  }
+  100% {
+    translate: 160vw 0;
+  }
+}
+
+@keyframes star-twinkle {
+  0% {
+    opacity: 0;
+    scale: 0.7;
+  }
+  45% {
+    opacity: 0;
+    scale: 0.7;
+  }
+  62% {
+    opacity: var(--max-op);
+    scale: 1.15;
+  }
+  80% {
+    opacity: 0;
+    scale: 0.7;
+  }
+  100% {
+    opacity: 0;
+    scale: 0.7;
+  }
+}
+
+@keyframes star-shift {
+  0% {
+    translate: 0 0;
+  }
+  33% {
+    translate: var(--dx1) var(--dy1);
+  }
+  66% {
+    translate: var(--dx2) var(--dy2);
+  }
+  100% {
+    translate: 0 0;
+  }
+}

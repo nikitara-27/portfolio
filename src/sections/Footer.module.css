@@ -1,0 +1,440 @@
+.footer {
+  position: relative;
+  background: var(--color-bg);
+}
+
+.frame {
+  position: relative;
+  overflow: hidden;
+  /* Roughly the bottom third of the viewport, rather than the ~60vh this
+     used to reserve — the grid below is deliberately compacted (mascot and
+     the copyright line share a row with the content above them, instead of
+     each getting their own) so everything still fits without crowding. */
+  min-height: 33vh;
+  /* The cloud layer inside uses mix-blend-mode, which forces its own
+     compositing layer — without isolating that layer here, some browsers
+     can fail to re-clip it against this element's own animated
+     border-radius (see the scroll-scrubbed tween below), letting a sliver
+     of it render past the rounded corner instead of getting cut off with
+     the rest of the background. will-change hints the browser to keep
+     recomputing that clip as the radius tweens, rather than reusing a
+     stale one. */
+  isolation: isolate;
+  will-change: border-radius;
+}
+
+/* Tablet/mobile: pin to a hard ~33vh cap (not just a floor) instead of
+   growing to fit content — the content-side rules below (padding, gaps,
+   icon sizes) are compressed specifically so real content still fits
+   inside it without .frame's own overflow: hidden (above) silently
+   clipping anything. */
+@media (max-width: 1024px) {
+  .frame {
+    max-height: 33vh;
+    /* The compressed content below is typically shorter than the 33vh cap
+       itself (it's sized to comfortably clear it, not fill it exactly) —
+       centering it in the fixed-height frame avoids leaving it pinned to
+       the top with dead background space underneath. */
+    display: flex;
+    align-items: center;
+  }
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  padding: 2rem 4vw;
+}
+
+@media (max-width: 1024px) {
+  .content {
+    padding: 1.5rem 3vw 1rem;
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  column-gap: 2rem;
+  row-gap: 0.5rem;
+  max-width: 1240px;
+  margin: 0 auto;
+}
+
+.cheersRow {
+  grid-column: 1;
+  grid-row: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: default;
+}
+
+.cheers {
+  margin: 0;
+}
+
+.cheersIcon {
+  width: 92px;
+  height: auto;
+  display: block;
+  user-select: none;
+}
+
+@media (max-width: 1024px) {
+  .cheersIcon {
+    width: 56px;
+  }
+}
+
+/* Desktop's hover-swappable icon (see Footer.jsx) — hidden at tablet/mobile
+   in favor of .cheersIconStatic below, rather than touching the hover
+   state/handlers themselves. */
+.cheersIconStatic {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  .cheersIconDesktop {
+    display: none;
+  }
+
+  .cheersIconStatic {
+    display: block;
+  }
+}
+
+.connect {
+  grid-column: 1;
+  grid-row: 2;
+  align-self: start;
+  margin: 0;
+}
+
+/* Sitemap and Social share this single grid column, laid out as their own
+   side-by-side sub-grid rather than as two separate top-level columns.
+   Spans rows 1-2 (rather than just row 2, alongside "Let's connect.") so
+   align-self: start pins its own top to the top of row 1 — without
+   forcing row 1 itself to grow to its height, which would otherwise push
+   "Let's connect." down with it. From there, margin-top nudges it down
+   to sit exactly on "Cheers!"'s text baseline (measured directly via a
+   zero-size baseline-aligned marker, not derived from font metrics —
+   those approximated a couple px off from how the browser actually lays
+   the line out). */
+.sitemapSocial {
+  grid-column: 2;
+  grid-row: 1 / 3;
+  align-self: start;
+  margin-top: 63px;
+  margin-left: 2.75rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+/* Tablet keeps the desktop 4-column grid structure — only the "Cheers!"
+   baseline offset needs to shrink, proportional to the tablet-scale h1
+   (36px vs. desktop's 48px) this was originally measured against. Scoped
+   to tablet only, not mobile: mobile's own block further down resets this
+   to 0 since it drops the baseline-aligned layout for a stacked column. */
+@media (max-width: 1024px) and (min-width: 721px) {
+  .cheersRow {
+    align-self: baseline;
+  }
+
+  .sitemapSocial {
+    align-self: baseline;
+    margin-top: 0;
+    margin-left: 2rem;
+  }
+}
+
+.subColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+@media (max-width: 1024px) {
+  .subColumn {
+    gap: 0.5rem;
+  }
+}
+
+.mascot {
+  position: relative;
+  grid-column: 4;
+  /* Shares .connect/.sitemapSocial's row (rather than getting its own)
+     so it sets this row's height instead of stacking a whole extra row
+     on top of it — the main lever that keeps the footer's total height
+     down to roughly a third of the page. */
+  grid-row: 2;
+  align-self: start;
+  justify-self: end;
+  width: 160px;
+  cursor: default;
+}
+
+/* Shrinks the mascot at tablet too (not just hidden-at-mobile below) — it's
+   the single biggest fixed-size element competing for the ~33vh cap on
+   tablet, where (unlike mobile) it isn't removed. */
+@media (max-width: 1024px) {
+  .mascot {
+    width: 110px;
+  }
+}
+
+.mascotFrames {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+}
+
+.mascotImg {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  user-select: none;
+}
+
+/* The always-visible base sleep frame (see Footer.jsx) — no transition, so
+   leaving hover reveals it the instant the awake frame's opacity drops. */
+.mascotFrameBase {
+  opacity: 1;
+}
+
+/* The "z" frames (1-3) cut in/out quickly on top of the base frame — sharp
+   and quick rather than a slow fade, while the pacing between cuts (set in
+   Footer.jsx) stays slow and breathe-like. */
+.mascotFrame {
+  opacity: 0;
+  transition: opacity 0.12s ease-out;
+}
+
+.mascotFrameVisible {
+  opacity: 1;
+}
+
+/* The awake (hover) frame sits above the sleep frames and swaps in/out
+   instantly, matching the established "no fade" cat_sleep/cat_up pattern. */
+.mascotAwake {
+  z-index: 1;
+  opacity: 0;
+}
+
+.mascotAwakeVisible {
+  opacity: 1;
+}
+
+/* Traces the cat's own silhouette (a few px of margin to close gaps in the
+   line art, no added sticker margin) so hover only triggers over the
+   visible cat, not the white die-cut border/padding around it. Both
+   cat-sleep and cat-up share this exact body, so one shape covers both
+   states without needing to swap it on hover. */
+.mascotHitArea {
+  position: absolute;
+  inset: 0;
+  /* Must outrank .mascotAwake's z-index: 1 — .mascotFrames doesn't
+     establish its own stacking context, so that z-index otherwise leaks
+     out and stacks the (invisible but still hit-testable) awake image
+     above this hit area, silently swallowing hover events. */
+  z-index: 2;
+  clip-path: polygon(
+    47.45% 79.02%,
+    41.78% 77.4%,
+    33.97% 77.75%,
+    31.83% 75.78%,
+    28.59% 75.55%,
+    27.26% 74.8%,
+    25.72% 72.34%,
+    25.43% 71.06%,
+    24.25% 70.05%,
+    17.77% 67.8%,
+    12.27% 68.08%,
+    10.47% 67.45%,
+    8.04% 64.79%,
+    5.61% 63.63%,
+    4.2% 61.63%,
+    3.62% 59.03%,
+    3.56% 55.15%,
+    4.77% 51.22%,
+    6.19% 49.62%,
+    7.78% 48.96%,
+    7.32% 47.74%,
+    9.9% 46.04%,
+    13.51% 41.49%,
+    16.44% 38.69%,
+    21.06% 36.02%,
+    25.23% 34.92%,
+    31.31% 34.64%,
+    34.55% 35.1%,
+    35.47% 34.4%,
+    37.85% 34.4%,
+    38.66% 33.71%,
+    40.1% 34.11%,
+    53.24% 33.83%,
+    60.07% 34.52%,
+    59.23% 32.47%,
+    60.47% 31.74%,
+    66.72% 35.62%,
+    71.18% 35.39%,
+    72.92% 34.58%,
+    74.36% 35.79%,
+    79.51% 37.64%,
+    83.91% 40.31%,
+    87.91% 38.98%,
+    89.99% 39.27%,
+    91.12% 40.1%,
+    91.64% 41.32%,
+    91.52% 42.77%,
+    89.03% 48.5%,
+    89.38% 54.22%,
+    88.74% 58.22%,
+    87.96% 59.46%,
+    86.02% 60.88%,
+    86.89% 62.67%,
+    87.07% 64.76%,
+    86.72% 66.55%,
+    85.65% 67.91%,
+    83.68% 69.18%,
+    79.46% 69.65%,
+    77.26% 69.42%,
+    74.77% 68.26%,
+    71.76% 69.59%,
+    67.65% 69.53%,
+    64.58% 71.04%,
+    59.78% 71.5%,
+    58.25% 74.88%,
+    57.35% 75.78%,
+    50.35% 78.39%,
+    47.45% 79.02%
+  );
+  cursor: pointer;
+}
+
+@media (max-width: 720px) {
+  .mascot {
+    display: none;
+  }
+}
+
+/* Shares .connect's own cell (column 1, row 2) rather than a row of its
+   own — align-self: end pins it to the bottom of that cell, under
+   "Let's connect.", while .mascot (the tallest thing in this row) sets
+   how much room there actually is. */
+.copyright {
+  grid-column: 1;
+  grid-row: 2;
+  align-self: end;
+  margin: 0;
+  color: #647a94;
+}
+
+/* Shares .mascot's own cell the same way — align-self: end sits it under
+   the cat sticker, and justify-self: end starts it flush with the
+   mascot image's own right edge. The cat's SVG canvas has a sliver of
+   transparent padding past its visible white border on every side
+   (measured: the border's rightmost opaque pixel sits at 93.98% of the
+   image's width) — margin-right pulls this back in by that same amount
+   so "love" ends at the border's actual edge, not the image's. */
+.madeWithLove {
+  grid-column: 4;
+  grid-row: 2;
+  justify-self: end;
+  align-self: end;
+  margin: 0 9.63px 0 0;
+  color: #647a94;
+}
+
+
+.label {
+  color: #647a94;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.linkList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.link {
+  align-self: flex-start;
+  font-family: var(--font-family-body);
+  font-weight: var(--font-weight-normal);
+  font-size: var(--font-size-body);
+  color: var(--color-text);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.link:hover {
+  color: #647a94;
+  text-decoration: underline;
+}
+
+@media (max-width: 1024px) {
+  .linkList {
+    gap: 0.4rem;
+  }
+
+  .link {
+    font-size: 0.875rem;
+  }
+}
+
+@media (max-width: 720px) {
+  .frame {
+    /* 2/5 of the viewport — up from the ~33vh the ≤1024px block above
+       still hard-caps tablet at, since this restructured single-column
+       stack (Sitemap/Social now below "Let's connect." instead of beside
+       it) is taller than the previous side-by-side layout. */
+    max-height: 40vh;
+  }
+
+  .content {
+    padding: 0.875rem 1.25rem 0.5rem;
+  }
+
+  /* Sitemap/Social now stack below "Let's connect." instead of sitting
+     beside Cheers!/Connect — single column, in document order. */
+  .grid {
+    grid-template-columns: 1fr;
+    row-gap: 0.5rem;
+  }
+
+  .cheersIcon {
+    width: 44px;
+  }
+
+  .connect {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .sitemapSocial {
+    grid-column: 1;
+    grid-row: 3;
+    align-self: start;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.3rem;
+    margin-top: 0;
+    margin-left: 0;
+  }
+
+  .copyright {
+    grid-column: 1;
+    grid-row: 4;
+    align-self: start;
+    margin-top: 0.25rem;
+  }
+
+  .madeWithLove {
+    display: none;
+  }
+}

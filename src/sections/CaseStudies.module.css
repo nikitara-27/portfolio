@@ -1,0 +1,41 @@
+.section {
+  position: relative;
+  background: var(--color-bg);
+  padding: 120px 2rem;
+}
+
+.inner {
+  max-width: 1240px;
+  margin: 0 auto;
+}
+
+.heading {
+  margin-bottom: 3rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 3rem 2.75rem;
+}
+
+@media (max-width: 720px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+}
+
+.placeholder {
+  background: var(--color-divider);
+  border-radius: 28px;
+  /* Matches .card's own aspect-ratio (WorkCard.module.css) rather than an
+     independent one. When a placeholder and a real card land in the same
+     row (as they now can, after the grid was reordered down to one
+     placeholder) with different ratios, the grid's 1fr columns have to
+     reconcile both items' own width-to-height math against one shared row
+     height — which resolves into wildly uneven column widths instead of
+     the equal split 1fr implies. Keeping every item's ratio identical
+     removes that conflict regardless of how they land in the grid. */
+  aspect-ratio: 1.185 / 1;
+}

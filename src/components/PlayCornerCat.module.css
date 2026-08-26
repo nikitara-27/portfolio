@@ -1,0 +1,27 @@
+.catBox {
+  position: absolute;
+  top: -14px;
+  right: 20px;
+  z-index: 2;
+  /* Fixed box, independent of each PNG's own native pixel size (they
+     differ: 510x300 / 585x300 / 525x300) -- object-fit: contain on .cat
+     below scales each frame into this same box so switching frames never
+     resizes/bounces the sprite. Width/height ratio (2.0) is kept above the
+     widest source frame's own ratio (585/300 = 1.95) so every frame is
+     height-constrained by contain, not width-constrained -- otherwise
+     different frames would scale by different factors. */
+  width: 88px;
+  height: 44px;
+  cursor: pointer;
+}
+
+.cat {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  user-select: none;
+  /* Keeps the sprite's hard pixel edges crisp at this display size instead
+     of letting the browser smooth-interpolate the raster PNG. */
+  image-rendering: pixelated;
+}

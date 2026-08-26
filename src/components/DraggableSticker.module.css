@@ -1,0 +1,80 @@
+.stickerRoot {
+  position: relative;
+  /* Stickers can be dragged anywhere on the page, including under the nav
+     bar — this keeps the nav (z-index: 10) always stacking above them,
+     rather than constraining where a sticker is allowed to go. */
+  z-index: 1;
+  display: inline-block;
+}
+
+.sticker {
+  --lift: 0;
+  display: block;
+  width: 100%;
+  height: auto;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  will-change: transform;
+  filter: drop-shadow(2.2px 0 0 #fff) drop-shadow(-2.2px 0 0 #fff) drop-shadow(0 2.2px 0 #fff) drop-shadow(0 -2.2px 0 #fff)
+    drop-shadow(0 calc(2px + var(--lift) * 12px) calc(4px + var(--lift) * 12px) rgba(0, 0, 0, calc(0.1 + var(--lift) * 0.12)));
+}
+
+.sticker:active {
+  cursor: grabbing;
+}
+
+.bubble {
+  position: absolute;
+  left: 50%;
+  bottom: 100%;
+  z-index: 5;
+  margin-bottom: var(--bubble-gap, 20px);
+  background: #fff;
+  color: #000;
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-normal);
+  font-size: var(--font-size-sticker-bubble);
+  white-space: nowrap;
+  padding: 0.5rem 0.9rem;
+  border-radius: 14px;
+  border: 1.5px solid #000;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 6px) scale(0.9);
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.bubble::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-top: 7px solid #000;
+}
+
+.bubble::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: calc(100% - 1.6px);
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 5.5px solid transparent;
+  border-right: 5.5px solid transparent;
+  border-top: 5.5px solid #fff;
+}
+
+.stickerRoot:hover .bubble {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, 0) scale(1);
+}

@@ -1,0 +1,224 @@
+.eyebrow {
+  font-family: var(--font-family-body);
+  font-weight: var(--font-weight-normal);
+  font-size: var(--font-size-body);
+  color: var(--color-muted);
+  margin: 0 0 0.75rem;
+}
+
+.subHeading {
+  color: var(--color-text);
+  margin-bottom: 0.75rem;
+}
+
+.subHeading:not(:first-child) {
+  margin-top: 2rem;
+}
+
+/* Directly under an eyebrow label, the heading should sit at just the
+   eyebrow's own margin-bottom, not the larger gap :not(:first-child) above
+   normally adds to separate a subheading from a preceding paragraph. */
+.eyebrow + .subHeading {
+  margin-top: 0;
+}
+
+.body {
+  color: var(--color-text);
+  margin-bottom: 1rem;
+}
+
+.body:last-child {
+  margin-bottom: 0;
+}
+
+.pullQuote {
+  color: var(--color-accent-green);
+  margin: 1.5rem 0;
+}
+
+.figure {
+  margin: 1.5rem 0 0;
+}
+
+.figure img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  /* Shows while the image is still loading instead of blank white. */
+  background: var(--color-divider);
+}
+
+/* Opt-in per Figure instance (the "shadow" prop) rather than every figure
+   image, since most (e.g. the Excel spreadsheet screenshot) sit flush
+   against the page instead of reading as a floating card. */
+.figureImgShadow {
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.18);
+}
+
+.sideBySide {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem;
+  align-items: start;
+}
+
+.sideBySide .figure {
+  margin-top: 0;
+}
+
+@media (max-width: 720px) {
+  .sideBySide {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+.media {
+  display: block;
+  width: 100%;
+  height: auto;
+  /* Traces the rounded corner of the iPad bezel already baked into these
+     screen-recording clips, rather than an arbitrary card-radius. */
+  border-radius: 24px;
+}
+
+/* Crops out baked-in letterboxing (see Video's `crop` prop) — sized to the
+   recording's actual content aspect ratio, with the oversized video inside
+   clipped by this wrapper's overflow:hidden. */
+.mediaCropFrame {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  border-radius: 8px;
+}
+
+.mediaCropped {
+  position: absolute;
+  display: block;
+  height: auto;
+}
+
+.caption {
+  color: var(--color-muted);
+  margin: 0.75rem 0 0;
+}
+
+.placeholder {
+  color: var(--color-muted);
+  font-style: italic;
+}
+
+.tagRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  /* Matches .sectionHeading's own margin-bottom (CaseStudyLayout.module.css)
+     so the title→tags gap and tags→paragraph gap read as the same size. */
+  margin: 0 0 1.5rem;
+}
+
+.tag {
+  background: #f5f1ea;
+  color: var(--color-text);
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.processSteps {
+  display: grid;
+  /* minmax(0, 1fr), not a bare 1fr — a bare 1fr track's minimum is `auto`
+     (its content's min-content size), so a card whose content ever needs
+     more than an even third (a longer heading, a bigger icon asset) can
+     force that whole column — and the row — wider than the container
+     instead of wrapping/shrinking to fit. minmax(0, 1fr) removes that
+     content-driven floor, keeping all three columns pinned to an exact,
+     equal third of the available width no matter what's inside them. */
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2rem;
+  margin-top: 1.5rem;
+}
+
+@media (max-width: 720px) {
+  .processSteps {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}
+
+.processStep {
+  display: flex;
+  flex-direction: column;
+}
+
+.processTile {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  border-radius: 18px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+}
+
+.processTileBg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Sits on top of the blurred background — each icon keeps its own natural
+   aspect ratio (they aren't all the same shape) and is just capped to a
+   consistent share of the tile, rather than being stretched to fill it. */
+.processTileIcon {
+  position: relative;
+  z-index: 1;
+  max-width: 55%;
+  max-height: 55%;
+  width: auto;
+  height: auto;
+}
+
+.processHeading {
+  color: var(--color-text);
+  margin-bottom: 0.5rem;
+}
+
+.reflectionStack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.reflectionCard {
+  background: var(--reflection-card-bg, #f1f6f8);
+  padding: 2rem;
+  border-radius: 6px;
+}
+
+.reflectionCard .body {
+  color: var(--reflection-card-text, var(--color-text));
+}
+
+/* Small inner radius (above, shared by both) at the seam where the two
+   cards meet, large outer radius only on the two true outer corners — reads
+   as one continuous grouped shape rather than two independent cards. */
+.reflectionStack > .reflectionCard:first-child {
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+}
+
+.reflectionStack > .reflectionCard:last-child {
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+
+.reflectionTitle {
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-h3);
+  color: var(--reflection-card-text, var(--color-text));
+}
