@@ -2,7 +2,18 @@ import { useEffect, useRef } from 'react'
 
 // A video only plays while it's substantially on-screen, rather than
 // running (and burning bandwidth/CPU) the whole time the page is open.
-const VISIBILITY_THRESHOLD = 0.5
+//
+// Deliberately forgiving (not e.g. 0.5): intersectionRatio is a 2D area
+// ratio, not a purely vertical one — an item that's fully visible
+// vertically but clipped by even a few px on its *horizontal* edge (a
+// multi-item row like the Config accordion, especially on a narrow mobile
+// viewport, where the first/last tile can end up a hair past the
+// container's edge) loses enough area to land under a stricter threshold
+// and never starts playing at all. Confirmed directly: the first tile in
+// the 4-video accordion measured intersectionRatio 0.45 (permanently
+// stuck un-played) against a 0.5 threshold, purely from ~12px of
+// horizontal clipping, despite being 100% visible top-to-bottom.
+const VISIBILITY_THRESHOLD = 0.15
 
 // Ref for a <video> that autoplays only while it's in view, pausing once it
 // scrolls out — and restarts from the beginning on every re-entry rather
@@ -66,7 +77,17 @@ export function usePlayInView(startDelayMs = 0) {
           video.pause()
         }
       },
-      { threshold: VISIBILITY_THRESHOLD },
+      {
+        threshold: VISIBILITY_THRESHOLD,
+        // Starts buffering slightly before the video is actually centered
+        // in view rather than exactly at the threshold — gives slower
+        // (throttled/mobile) connections a head start. Horizontal margin
+        // too, not just vertical: a multi-item row (the Config accordion)
+        // can have its edge tiles sit right at the container's horizontal
+        // bound, and this expanded root reduces how easily that clips
+        // enough area to matter (see VISIBILITY_THRESHOLD's own comment).
+        rootMargin: '100px',
+      },
     )
 
     observer.observe(video)

@@ -18,6 +18,13 @@ const CONFIG_LOGO_ANIMATION_URL = '/videos/play-logo-animation.mp4'
 const CONFIG_DIGITAL_POSTERS_URL = '/videos/play-config-digital-posters.mp4'
 const CONFIG_DIGITAL_EVENT_URL = '/videos/play-config-digital-event.mp4'
 const CONFIG_DIGITAL_WORKSHOP_URL = '/videos/play-config-digital-workshop.mp4'
+// Shown instantly while each clip's own data is still loading — without
+// this, an unloaded <video> is just a blank box, which on a slow
+// connection reads as "nothing is happening" rather than "still loading."
+const CONFIG_LOGO_ANIMATION_POSTER = '/videos/play-logo-animation-poster.jpg'
+const CONFIG_DIGITAL_POSTERS_POSTER = '/videos/play-config-digital-posters-poster.jpg'
+const CONFIG_DIGITAL_EVENT_POSTER = '/videos/play-config-digital-event-poster.jpg'
+const CONFIG_DIGITAL_WORKSHOP_POSTER = '/videos/play-config-digital-workshop-poster.jpg'
 
 // Left to right, per the accordion's default equal-width order. An entry
 // can carry its own `focusX` (0-100, default 50/centered) if the image
@@ -45,10 +52,10 @@ const GREETING_CARDS_ACCORDION_IMAGES = [
 // Dimensions read via macOS's Spotlight metadata (mdls), which — unlike the
 // sips mistake on the greeting-card photos — is rotation-aware.
 const CONFIG_ACCORDION_VIDEOS = [
-  { type: 'video', src: CONFIG_LOGO_ANIMATION_URL, alt: 'Config 2027 logo animation concept', aspectRatio: 1080 / 1080 },
-  { type: 'video', src: CONFIG_DIGITAL_POSTERS_URL, alt: 'Config 2027 digital poster concept, speaker spotlight', aspectRatio: 1080 / 1350 },
-  { type: 'video', src: CONFIG_DIGITAL_EVENT_URL, alt: 'Config 2027 digital event poster concept', aspectRatio: 1080 / 1350 },
-  { type: 'video', src: CONFIG_DIGITAL_WORKSHOP_URL, alt: 'Config 2027 digital workshop poster concept', aspectRatio: 1080 / 1350 },
+  { type: 'video', src: CONFIG_LOGO_ANIMATION_URL, poster: CONFIG_LOGO_ANIMATION_POSTER, alt: 'Config 2027 logo animation concept', aspectRatio: 1080 / 1080 },
+  { type: 'video', src: CONFIG_DIGITAL_POSTERS_URL, poster: CONFIG_DIGITAL_POSTERS_POSTER, alt: 'Config 2027 digital poster concept, speaker spotlight', aspectRatio: 1080 / 1350 },
+  { type: 'video', src: CONFIG_DIGITAL_EVENT_URL, poster: CONFIG_DIGITAL_EVENT_POSTER, alt: 'Config 2027 digital event poster concept', aspectRatio: 1080 / 1350 },
+  { type: 'video', src: CONFIG_DIGITAL_WORKSHOP_URL, poster: CONFIG_DIGITAL_WORKSHOP_POSTER, alt: 'Config 2027 digital workshop poster concept', aspectRatio: 1080 / 1350 },
 ]
 
 // Caps how much of the row a single expanded image can claim. Without this,
@@ -84,6 +91,20 @@ function AccordionRow({ images }) {
     setHoveredFlexGrow((fraction * otherCount) / (1 - fraction))
   }
 
+  // Touch devices have no hover state, so onMouseEnter alone never fires
+  // there — this is the tap equivalent, wired to onClick (not a raw touch
+  // event: browsers already synthesize a click from a tap, and handling
+  // touchstart ourselves risks double-firing/ghost clicks). Tapping the
+  // already-expanded item collapses it back, since there's no mouseleave
+  // equivalent to reset it automatically.
+  const handleActivate = (index, aspectRatio) => {
+    if (hoveredIndex === index) {
+      setHoveredIndex(null)
+      return
+    }
+    handleEnter(index, aspectRatio)
+  }
+
   return (
     <div className={styles.accordionRow} ref={rowRef} onMouseLeave={() => setHoveredIndex(null)}>
       {images.map((image, index) => {
@@ -95,6 +116,7 @@ function AccordionRow({ images }) {
             className={styles.accordionItem}
             style={{ flexGrow: index === hoveredIndex ? hoveredFlexGrow : 1 }}
             onMouseEnter={() => handleEnter(index, image.aspectRatio)}
+            onClick={() => handleActivate(index, image.aspectRatio)}
           >
             <AccordionMedia image={image} focusX={focusX} zoom={zoom} index={index} />
           </div>
@@ -125,11 +147,17 @@ function AccordionMedia({ image, focusX, zoom, index }) {
         ref={videoRef}
         className={styles.accordionMedia}
         src={image.src}
+        poster={image.poster}
         style={style}
         loop
         muted
         playsInline
-        preload="metadata"
+        // The first item is visible by default (before any expand
+        // interaction) — worth eagerly buffering. The other three stay at
+        // "metadata" so four full videos don't all compete for bandwidth
+        // simultaneously on load; each is now small enough (511-720KB, was
+        // up to 7.97MB) that this is a minor head start, not a hard gate.
+        preload={index === 0 ? 'auto' : 'metadata'}
       />
     )
   }
