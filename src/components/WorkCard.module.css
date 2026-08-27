@@ -1,7 +1,8 @@
 /* One format at every breakpoint now — image on top, text below, no
-   background/border at rest (border/shadow/scale only appear on desktop
-   hover, see the media query below). This used to be the mobile-only
-   layout; there's no separate desktop overlay/collapse treatment anymore. */
+   background/border at rest (border/shadow/scale appear on hover at any
+   width, or on touch-press below — see the media query and .cardPressed).
+   This used to be the mobile-only layout; there's no separate desktop
+   overlay/collapse treatment anymore. */
 .card {
   position: relative;
   display: flex;
@@ -25,17 +26,33 @@
     transform 0.22s ease;
 }
 
-/* Requires real hover support *and* enough width for it to be a deliberate
-   desktop interaction — matches WorkCard.jsx's own DESKTOP_HOVER_BREAKPOINT
-   gate on the video-preview swap, so the border/shadow/scale here and that
-   swap always turn on and off together as one state, never independently. */
-@media (hover: hover) and (pointer: fine) and (min-width: 1025px) {
+/* Real hover support, at any viewport width — not gated to desktop widths
+   the way the video-preview swap still is (see WorkCard.jsx's
+   DESKTOP_HOVER_BREAKPOINT): a browser window resized narrow, or a tablet
+   with an external mouse/trackpad attached, both still have a genuine
+   pointer to hover with, so they get this same border/shadow/scale even
+   though neither gets the video swap. */
+@media (hover: hover) and (pointer: fine) {
   .card:hover {
     border-color: var(--color-divider);
     box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
     transform: scale(1.025);
     z-index: 1;
   }
+}
+
+/* Touch-only devices have no :hover to reach for, so WorkCard.jsx applies
+   this class itself on touchstart/touchend instead — same end state as
+   :hover above (and the same .card transition drives the fade either way),
+   just triggered imperatively rather than by the pseudo-class. Never
+   applied on a device the hover media query above already matches (see
+   isTouchOnly in WorkCard.jsx), so a hover-capable device never gets both
+   triggers fighting over the same properties. */
+.cardPressed {
+  border-color: var(--color-divider);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+  transform: scale(1.025);
+  z-index: 1;
 }
 
 .media {

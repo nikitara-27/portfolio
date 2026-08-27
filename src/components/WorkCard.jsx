@@ -2,11 +2,13 @@ import { useLayoutEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import styles from './WorkCard.module.css'
 
-// The hover state (border/shadow/scale, and the video swap below) is
-// desktop-only — below this, the card stays exactly as it renders at rest,
-// since there's no clean hover trigger on a touch device and a cramped
-// window is a poor place for a video to start autoplaying anyway. Matches
-// the CSS hover media query's own min-width gate, so the two stay in sync.
+// Gates the video-preview swap only — border/shadow/scale now applies at
+// any width (see WorkCard.module.css), triggered by real hover or, on
+// touch-only devices, by press instead (below). Video specifically stays
+// desktop-only: a cramped window is a poor place for one to start
+// autoplaying, preview clips add real bandwidth cost on what's more likely
+// a metered mobile connection below this width, and the crossfade itself
+// assumes room for the full card, not a cropped mobile one.
 const DESKTOP_HOVER_BREAKPOINT = 1024
 
 function WorkCard({ project, priority = false }) {
@@ -114,6 +116,61 @@ function WorkCard({ project, priority = false }) {
       videoEls[1].removeEventListener('ended', advance)
     }
   }, [previewVideos, hasVideoPreview])
+
+  // Border/shadow/scale on touch: :hover (see WorkCard.module.css) already
+  // covers every hover-capable pointer at any width — a mouse/trackpad,
+  // including one attached to an otherwise-touch tablet. This effect only
+  // has to handle the complementary case, a device with *no* such pointer,
+  // where the same feedback has to come from an explicit press instead.
+  //
+  // (hover: hover) and (pointer: fine) is the same feature-detection query
+  // as the CSS media rule, read here via matchMedia so JS and CSS always
+  // agree on which devices are "hover-capable" rather than maintaining two
+  // separate opinions — and re-checked on change, not just at mount, since
+  // it's a live signal: a Surface-style tablet gaining or losing an
+  // attached mouse mid-session flips it without a reload. Deliberately not
+  // UA-sniffing or checking viewport width for this — width says nothing
+  // about whether a pointer is attached, and UA strings are exactly the
+  // kind of signal that quietly drifts out of date as new devices ship.
+  useLayoutEffect(() => {
+    const card = cardRef.current
+    if (!card) return undefined
+
+    const mm = window.matchMedia('(hover: hover) and (pointer: fine)')
+    let isTouchOnly = !mm.matches
+
+    const addPressed = () => card.classList.add(styles.cardPressed)
+    const removePressed = () => card.classList.remove(styles.cardPressed)
+
+    const syncInputMode = () => {
+      isTouchOnly = !mm.matches
+      // A device that just gained hover capability (mouse attached
+      // mid-session) hands off to :hover immediately rather than
+      // potentially leaving this class stuck on from an in-progress touch.
+      if (!isTouchOnly) removePressed()
+    }
+    mm.addEventListener('change', syncInputMode)
+
+    const onTouchStart = () => {
+      if (isTouchOnly) addPressed()
+    }
+    const onTouchEnd = () => {
+      if (isTouchOnly) removePressed()
+    }
+    // passive: these never call preventDefault, so telling the browser
+    // that up front lets it start scrolling/navigating immediately rather
+    // than waiting to see if this handler cancels the touch.
+    card.addEventListener('touchstart', onTouchStart, { passive: true })
+    card.addEventListener('touchend', onTouchEnd, { passive: true })
+    card.addEventListener('touchcancel', onTouchEnd, { passive: true })
+
+    return () => {
+      mm.removeEventListener('change', syncInputMode)
+      card.removeEventListener('touchstart', onTouchStart)
+      card.removeEventListener('touchend', onTouchEnd)
+      card.removeEventListener('touchcancel', onTouchEnd)
+    }
+  }, [])
 
   const compactHiddenTags = project.compactHiddenTags ?? []
   const CardTag = project.href ? Link : 'article'
