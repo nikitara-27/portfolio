@@ -1,10 +1,29 @@
+import { useEffect, useState } from 'react'
+import { FiArrowUpRight } from 'react-icons/fi'
 import photo from '../assets/images/niki-taradash1.jpg'
 import catIcon from '../assets/icons/cat-sit.svg'
 import matchaIcon from '../assets/icons/matcha-latte.svg'
 import cableCarIcon from '../assets/icons/cable-car.png'
+import buLogo from '../assets/logos/bu.png'
+import uliLogo from '../assets/logos/uli.jpeg'
+import bostonhacksLogo from '../assets/logos/bostonhacks.jpeg'
+import bujsaLogo from '../assets/logos/bujsa.jpeg'
+import bendiWellnessLogo from '../assets/logos/bendi-wellness.jpeg'
+import figmaLogo from '../assets/logos/figma.png'
+import googleLogo from '../assets/logos/google.webp'
 import DraggableSticker from '../components/DraggableSticker'
 import Footer from './Footer'
 import styles from './About.module.css'
+
+// Served as-is from /public (not imported from src/assets) so it keeps a
+// stable, unhashed URL to link to directly rather than going through
+// Vite's asset pipeline.
+const RESUME_PDF_URL = '/niki-taradash-resume.pdf'
+
+// Shows the stickers' hover-lift "you can drag this" hint on a visitor's
+// first visit only, then never again — persisted (not sessionStorage) since
+// the point is a one-time introduction, not a once-per-session reminder.
+const STICKER_HINT_SEEN_KEY = 'stickerHintSeen'
 
 const BODY_PARAGRAPHS = [
   'I am a senior graphic design and advertising dual-degree student at Boston University.',
@@ -31,7 +50,103 @@ const FACTS = [
   },
 ]
 
+const EXPERIENCE = [
+  // Unlike the other entries' source logos (which are square/rectangular and
+  // need cover's crop-to-fill), figma.png is already a tightly-cropped
+  // circular mark — cover would zoom past its own edge trying to fill a
+  // square frame with a circle. `logoFit: 'contain'` opts this one entry
+  // out of the shared cover behavior (see EntrySection) so it renders at
+  // its full, unzoomed proportions instead.
+  { logo: figmaLogo, role: 'Campus Leader @ Figma', dates: 'September 2026 – Present', logoFit: 'contain' },
+  { logo: bendiWellnessLogo, role: 'Product Design Intern @ Bendi Wellness', dates: 'September 2026 – Present' },
+  { logo: buLogo, role: 'UX Design Intern @ BU Law', dates: 'April 2026 – Present' },
+  {
+    logo: uliLogo,
+    role: 'Student UX Designer @ ULI: Homeward | BU Spark! UX Design Practicum',
+    dates: 'February 2026 – May 2026',
+  },
+  { logo: bostonhacksLogo, role: 'Co-Head of Design @ BostonHacks', dates: 'February 2026 – Present' },
+  { logo: bujsaLogo, role: 'VP of Marketing @ Japanese Student Association', dates: 'September 2025 – April 2026' },
+]
+
+const CERTIFICATES = [
+  { logo: googleLogo, role: 'Foundations of User Experience (UX) Design', dates: 'June 2026' },
+  { logo: googleLogo, role: 'Start the UX Design Process: Empathize, Define, and Ideate', dates: 'July 2026' },
+  { logo: googleLogo, role: 'Build Wireframes and Low-Fidelity Prototypes', dates: 'July 2026' },
+]
+
+const EDUCATION = [
+  { logo: buLogo, role: 'B.F.A. Graphic Design, Boston University', dates: 'September 2023 – May 2027' },
+  { logo: buLogo, role: 'B.S. Advertising, Boston University', dates: 'September 2023 – May 2027' },
+]
+
+function ResumeButton({ className }) {
+  return (
+    <a
+      href={RESUME_PDF_URL}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={`${styles.resumeButton} ${className} body-m`}
+    >
+      Download Resume (PDF)
+      <FiArrowUpRight className={styles.resumeButtonArrow} />
+    </a>
+  )
+}
+
+function EntrySection({ title, entries, actions }) {
+  return (
+    <div className={styles.entrySection}>
+      <div className={styles.entrySectionHeader}>
+        <h2 className={styles.entrySectionTitle}>{title}</h2>
+        {actions}
+      </div>
+      <div className={styles.entryList}>
+        {entries.map((entry) => (
+          <div className={styles.entry} key={entry.role}>
+            <img
+              src={entry.logo}
+              alt=""
+              aria-hidden="true"
+              className={entry.logoFit === 'contain' ? `${styles.entryLogo} ${styles.entryLogoContain}` : styles.entryLogo}
+              loading="lazy"
+              decoding="async"
+            />
+            <div className={styles.entryText}>
+              <h3 className={styles.entryRole}>{entry.role}</h3>
+              <p className={styles.entryDate}>{entry.dates}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 function About() {
+  // Lazy initializer runs synchronously during render — before any of the
+  // three sticker instances' own effects fire — so all three read the same
+  // pre-this-page-view value instead of racing to flip it themselves and
+  // disagreeing about whether this is "the" first visit.
+  const [showDragHint] = useState(() => {
+    try {
+      return localStorage.getItem(STICKER_HINT_SEEN_KEY) == null
+    } catch {
+      // Storage blocked (private mode, disabled) — just skip the hint
+      // rather than risk it reappearing every visit.
+      return false
+    }
+  })
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(STICKER_HINT_SEEN_KEY, '1')
+    } catch {
+      // Nothing to do if storage isn't writable — worst case the hint
+      // shows again next visit.
+    }
+  }, [])
+
   return (
     <>
       <section className={styles.about}>
@@ -61,6 +176,20 @@ function About() {
             </div>
           </div>
 
+          {/* Mobile-only: closes out the About Me blurb, right where the
+              button reads as a call-to-action for it — the same button
+              also renders (desktop/tablet only) inline next to "Experience"
+              below, toggled via CSS rather than duplicated logic. */}
+          <ResumeButton className={styles.resumeButtonStandalone} />
+
+          <EntrySection
+            title="Experience"
+            entries={EXPERIENCE}
+            actions={<ResumeButton className={styles.resumeButtonInline} />}
+          />
+          <EntrySection title="Education" entries={EDUCATION} />
+          <EntrySection title="Certificates" entries={CERTIFICATES} />
+
           <h2 className={styles.factsTitle}>A few things that define me beyond design</h2>
 
           <div className={styles.facts}>
@@ -73,6 +202,7 @@ function About() {
                 bubbleText={fact.bubbleText}
                 bubbleGap={fact.bubbleGap}
                 className={styles.factIcon}
+                showDragHint={showDragHint}
               />
             ))}
           </div>
