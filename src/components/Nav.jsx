@@ -93,6 +93,9 @@ function Nav({ onHomeClick }) {
         <Link to="/about" className={pathname === '/about' ? `${styles.link} ${styles.active}` : styles.link}>
           About
         </Link>
+        <Link to="/resume" className={pathname === '/resume' ? `${styles.link} ${styles.active}` : styles.link}>
+          Resume
+        </Link>
       </div>
 
       {/* Mobile-only hamburger toggle — hidden entirely above the mobile
@@ -133,6 +136,13 @@ function Nav({ onHomeClick }) {
           onClick={closeMenu}
         >
           About
+        </Link>
+        <Link
+          to="/resume"
+          className={pathname === '/resume' ? `${styles.mobileLink} ${styles.mobileLinkActive}` : styles.mobileLink}
+          onClick={closeMenu}
+        >
+          Resume
         </Link>
       </div>
     </nav>

@@ -7,6 +7,7 @@ import CursorEffects from './components/CursorEffects'
 import Landing from './sections/Landing'
 import About from './sections/About'
 import Play from './sections/Play'
+import Resume from './sections/Resume'
 import HomewardCaseStudy from './pages/HomewardCaseStudy'
 import BostonHacksCaseStudy from './pages/BostonHacksCaseStudy'
 import ImmigrationEnforcementReporterCaseStudy from './pages/ImmigrationEnforcementReporterCaseStudy'
@@ -24,6 +25,7 @@ function App() {
         <Route path="/" element={<Landing key={homeKey} />} />
         <Route path="/about" element={<About />} />
         <Route path="/play" element={<Play />} />
+        <Route path="/resume" element={<Resume />} />
         <Route path="/work/homeward" element={<HomewardCaseStudy />} />
         <Route path="/work/bostonhacks" element={<BostonHacksCaseStudy />} />
         <Route path="/work/immigrationenforcementreporter" element={<ImmigrationEnforcementReporterCaseStudy />} />
