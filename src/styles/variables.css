@@ -6,8 +6,8 @@
   --color-divider: #ded9d1;
   /* Same color as --color-divider, as separate r/g/b components — needed
      wherever it's used at a fractional alpha (rgba()/color-mix() can't take
-     a hex custom property and vary its opacity), e.g. WorkCard's hover-fill
-     animation and Nav's active-link background. */
+     a hex custom property and vary its opacity), e.g. Nav's active-link and
+     mobile-menu backgrounds. */
   --color-divider-rgb: 222, 217, 209;
   --color-accent-green: #425c2f;
   --color-accent-green-hover: #607d4b;

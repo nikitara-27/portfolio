@@ -132,47 +132,29 @@
   margin: 0;
 }
 
-.entryList {
+/* Experience's own text-only entries (no logo, see ExperienceEntry in
+   About.jsx) — the only entry list left on this page now that Education/
+   Certificates are gone. A generous gap: with no logo to anchor each row,
+   entries need a bit more room of their own to still read as separate
+   blocks rather than one run of text. */
+.experienceList {
   display: flex;
   flex-direction: column;
-  gap: 1.75rem;
+  gap: 2rem;
 }
 
-.entry {
-  display: flex;
-  align-items: flex-start;
-  gap: 1rem;
-}
-
-.entryLogo {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  object-fit: cover;
-  flex-shrink: 0;
-  background: var(--color-divider);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
-}
-
-/* Figma-only override (see EXPERIENCE's logoFit field in About.jsx) — its
-   source is already a tightly-cropped circle, so cover's crop-to-fill would
-   zoom past the artwork's own edge. contain scales it down to fit whole
-   instead; the .entryLogo circle stays as the shared frame/background. */
-.entryLogoContain {
-  object-fit: contain;
-}
-
-.entryText {
+.experienceEntry {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
 }
 
-.entryRole {
+.experienceTitle {
   margin: 0;
+  color: var(--color-text);
 }
 
-.entryDate {
+.experienceDate {
   margin: 0;
   color: var(--color-muted);
 }

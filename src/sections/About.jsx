@@ -4,13 +4,6 @@ import photo from '../assets/images/niki-taradash1.jpg'
 import catIcon from '../assets/icons/cat-sit.svg'
 import matchaIcon from '../assets/icons/matcha-latte.svg'
 import cableCarIcon from '../assets/icons/cable-car.png'
-import buLogo from '../assets/logos/bu.png'
-import uliLogo from '../assets/logos/uli.jpeg'
-import bostonhacksLogo from '../assets/logos/bostonhacks.jpeg'
-import bujsaLogo from '../assets/logos/bujsa.jpeg'
-import bendiWellnessLogo from '../assets/logos/bendi-wellness.jpeg'
-import figmaLogo from '../assets/logos/figma.png'
-import googleLogo from '../assets/logos/google.webp'
 import DraggableSticker from '../components/DraggableSticker'
 import Footer from './Footer'
 import styles from './About.module.css'
@@ -50,34 +43,16 @@ const FACTS = [
   },
 ]
 
+// company/role are kept as separate fields (rather than one preformatted
+// string) so the "Company — Role" em-dash join (see ExperienceEntry below)
+// lives in one place rather than being baked into six strings.
 const EXPERIENCE = [
-  // Unlike the other entries' source logos (which are square/rectangular and
-  // need cover's crop-to-fill), figma.png is already a tightly-cropped
-  // circular mark — cover would zoom past its own edge trying to fill a
-  // square frame with a circle. `logoFit: 'contain'` opts this one entry
-  // out of the shared cover behavior (see EntrySection) so it renders at
-  // its full, unzoomed proportions instead.
-  { logo: figmaLogo, role: 'Campus Leader @ Figma', dates: 'September 2026 – Present', logoFit: 'contain' },
-  { logo: bendiWellnessLogo, role: 'Product Design Intern @ Bendi Wellness', dates: 'September 2026 – Present' },
-  { logo: buLogo, role: 'UX Design Intern @ BU Law', dates: 'April 2026 – Present' },
-  {
-    logo: uliLogo,
-    role: 'Student UX Designer @ ULI: Homeward | BU Spark! UX Design Practicum',
-    dates: 'February 2026 – May 2026',
-  },
-  { logo: bostonhacksLogo, role: 'Co-Head of Design @ BostonHacks', dates: 'February 2026 – Present' },
-  { logo: bujsaLogo, role: 'VP of Marketing @ Japanese Student Association', dates: 'September 2025 – April 2026' },
-]
-
-const CERTIFICATES = [
-  { logo: googleLogo, role: 'Foundations of User Experience (UX) Design', dates: 'June 2026' },
-  { logo: googleLogo, role: 'Start the UX Design Process: Empathize, Define, and Ideate', dates: 'July 2026' },
-  { logo: googleLogo, role: 'Build Wireframes and Low-Fidelity Prototypes', dates: 'July 2026' },
-]
-
-const EDUCATION = [
-  { logo: buLogo, role: 'B.F.A. Graphic Design, Boston University', dates: 'September 2023 – May 2027' },
-  { logo: buLogo, role: 'B.S. Advertising, Boston University', dates: 'September 2023 – May 2027' },
+  { company: 'Figma', role: 'Campus Leader', dates: '2026 – present' },
+  { company: 'Bendi Wellness', role: 'Product Design Intern', dates: '2026 – present' },
+  { company: 'BU Law', role: 'UX Design Intern', dates: '2026 – present' },
+  { company: 'BostonHacks', role: 'Co-Head of Design', dates: '2026 – present' },
+  { company: 'ULI: Homeward', role: 'Student UX Designer | BU Spark! UX Design Practicum', dates: '2026' },
+  { company: 'Japanese Student Association', role: 'VP of Marketing', dates: '2025 – 2026' },
 ]
 
 function ResumeButton({ className }) {
@@ -94,31 +69,15 @@ function ResumeButton({ className }) {
   )
 }
 
-function EntrySection({ title, entries, actions }) {
+// Experience's own entry format — bold "Company — Role" line, muted date
+// line below, no logo.
+function ExperienceEntry({ company, role, dates }) {
   return (
-    <div className={styles.entrySection}>
-      <div className={styles.entrySectionHeader}>
-        <h2 className={styles.entrySectionTitle}>{title}</h2>
-        {actions}
-      </div>
-      <div className={styles.entryList}>
-        {entries.map((entry) => (
-          <div className={styles.entry} key={entry.role}>
-            <img
-              src={entry.logo}
-              alt=""
-              aria-hidden="true"
-              className={entry.logoFit === 'contain' ? `${styles.entryLogo} ${styles.entryLogoContain}` : styles.entryLogo}
-              loading="lazy"
-              decoding="async"
-            />
-            <div className={styles.entryText}>
-              <h3 className={styles.entryRole}>{entry.role}</h3>
-              <p className={styles.entryDate}>{entry.dates}</p>
-            </div>
-          </div>
-        ))}
-      </div>
+    <div className={styles.experienceEntry}>
+      <h3 className={styles.experienceTitle}>
+        {company} — {role}
+      </h3>
+      <p className={styles.experienceDate}>{dates}</p>
     </div>
   )
 }
@@ -182,13 +141,17 @@ function About() {
               below, toggled via CSS rather than duplicated logic. */}
           <ResumeButton className={styles.resumeButtonStandalone} />
 
-          <EntrySection
-            title="Experience"
-            entries={EXPERIENCE}
-            actions={<ResumeButton className={styles.resumeButtonInline} />}
-          />
-          <EntrySection title="Education" entries={EDUCATION} />
-          <EntrySection title="Certificates" entries={CERTIFICATES} />
+          <div className={styles.entrySection}>
+            <div className={styles.entrySectionHeader}>
+              <h2 className={styles.entrySectionTitle}>Experience</h2>
+              <ResumeButton className={styles.resumeButtonInline} />
+            </div>
+            <div className={styles.experienceList}>
+              {EXPERIENCE.map((entry) => (
+                <ExperienceEntry key={`${entry.company}-${entry.role}`} {...entry} />
+              ))}
+            </div>
+          </div>
 
           <h2 className={styles.factsTitle}>A few things that define me beyond design</h2>
 

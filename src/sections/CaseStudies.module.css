@@ -28,14 +28,11 @@
 
 .placeholder {
   background: var(--color-divider);
-  border-radius: 28px;
-  /* Matches .card's own aspect-ratio (WorkCard.module.css) rather than an
-     independent one. When a placeholder and a real card land in the same
-     row (as they now can, after the grid was reordered down to one
-     placeholder) with different ratios, the grid's 1fr columns have to
-     reconcile both items' own width-to-height math against one shared row
-     height — which resolves into wildly uneven column widths instead of
-     the equal split 1fr implies. Keeping every item's ratio identical
-     removes that conflict regardless of how they land in the grid. */
-  aspect-ratio: 1.185 / 1;
+  border-radius: 12px;
+  /* .card itself has no single aspect-ratio anymore (image + a naturally-
+     sized text block below it, see WorkCard.module.css) — matches just
+     .image's own ratio instead, the closest reasonable stand-in. Currently
+     unused (PROJECTS has no null entries to fill this), kept for whenever
+     a future odd project count needs a filler in the grid's last row. */
+  aspect-ratio: 3 / 2;
 }
