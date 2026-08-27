@@ -4,7 +4,11 @@ import luceMockup from '../assets/images/luce-mockup.jpg'
 import WorkCard from '../components/WorkCard'
 import styles from './CaseStudies.module.css'
 
-const PROJECTS = [
+// Exported so CaseStudyLayout can reuse the same title/blurb/tags/image
+// data (and the WorkCard component itself) for a case study page's own
+// "Next Up" section, instead of that content being re-typed per page and
+// drifting out of sync with these cards.
+export const PROJECTS = [
   {
     title: 'Immigration Enforcement Reporter',
     descriptionLines: ['Stepping in as sole designer to research and improve', 'an existing civic mapping tool.'],

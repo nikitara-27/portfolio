@@ -248,3 +248,58 @@
   color: var(--color-text);
   margin-bottom: 1.5rem;
 }
+
+/* One column, not the landing page's own 2-column grid (CaseStudies.module.css)
+   — "Next Up" only ever shows the two *other* case studies, and the brief
+   calls for them full-width and stacked rather than side by side. */
+.nextUp {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+/* This is the page's own .hero pattern (image, then text directly on the
+   page background — see .hero/.eyebrow/.title above) reused for each Next
+   Up item, not the landing-page grid card's bordered/colored-panel look
+   (WorkCard.module.css's .card). Pills and the "Team" label still borrow
+   WorkCard's own classes directly (see the import in CaseStudyLayout.jsx)
+   so they stay pixel-identical to the landing page's cards. */
+.nextUpItem {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.nextUpImage {
+  display: block;
+  width: 100%;
+  height: auto;
+  /* Matches .hero's own ratio/treatment exactly — same "big uncontained
+     image" language, just at this section's smaller scale. */
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  border-radius: 12px;
+  background: var(--color-divider);
+  margin-bottom: 1.25rem;
+  transition: transform 0.2s ease-out;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .nextUpItem:hover .nextUpImage {
+    transform: scale(1.01);
+  }
+}
+
+.nextUpHeader {
+  margin-bottom: 0.5rem;
+}
+
+.nextUpTitle {
+  color: var(--color-text);
+  margin: 0 0 0.35rem;
+}
+
+.nextUpDescription {
+  color: #747474;
+  margin: 0;
+}

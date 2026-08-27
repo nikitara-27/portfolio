@@ -1,9 +1,15 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { Link, useLocation } from 'react-router-dom'
 import { FiArrowUpRight } from 'react-icons/fi'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { getLenis } from '../lib/lenis'
 import Footer from '../sections/Footer'
+import { PROJECTS } from '../sections/CaseStudies'
+// Reusing WorkCard's own pill/"Team"-label styles (not the component
+// itself, see the note by .nextUp below) keeps these pixel-identical to
+// the landing page's cards with no separate copy to drift out of sync.
+import workCardStyles from './WorkCard.module.css'
 import styles from './CaseStudyLayout.module.css'
 
 // Smooth-scrolls to a section within the page (Lenis when it's mounted,
@@ -27,9 +33,31 @@ function scrollToSection(id) {
 // Shared shell for a case-study page: eyebrow/title/meta header, a floating
 // "Contents" side nav plus an in-flow section nav row (both jump-linked to
 // the same sections), the hero image, then the section bodies themselves.
+
+// Explicit per-page "Next Up" order (as hrefs into PROJECTS), keyed by the
+// current page's own href — not derivable from PROJECTS' own order (that
+// only worked while every page's other two happened to land in PROJECTS'
+// order; the Homeward page's now wants BHacks before LUCE, which is the
+// reverse of PROJECTS' own LUCE-then-BHacks order), so this is hand-set per
+// page rather than computed generically.
+const NEXT_UP_ORDER = {
+  '/work/immigrationenforcementreporter': ['/work/homeward', '/work/bostonhacks'],
+  '/work/homeward': ['/work/bostonhacks', '/work/immigrationenforcementreporter'],
+  '/work/bostonhacks': ['/work/immigrationenforcementreporter', '/work/homeward'],
+}
+
 // Content is passed in per-project (see pages/HomewardCaseStudy.jsx) so the
 // same layout/typography/dividers can be reused for future case studies.
 function CaseStudyLayout({ eyebrow, title, meta, links, sections, heroImage, heroAlt }) {
+  // Drives the "Next Up" section at the bottom of the page: the other two
+  // case studies, in the order NEXT_UP_ORDER specifies for whichever page
+  // this is. Still sourced from PROJECTS itself (title/blurb/tags/image),
+  // just reordered per page rather than reused in PROJECTS' own order.
+  const { pathname } = useLocation()
+  const nextUpProjects = (NEXT_UP_ORDER[pathname] ?? [])
+    .map((href) => PROJECTS.find((project) => project.href === href))
+    .filter(Boolean)
+
   // Measured off a hidden clone (below), never the visible title — the
   // visible title lives inside the very column this width gets applied to,
   // so observing it directly would feed its own resize back into itself
@@ -308,6 +336,61 @@ function CaseStudyLayout({ eyebrow, title, meta, links, sections, heroImage, her
                 {section.content}
               </section>
             ))}
+
+            {/* Not part of `sections` (and so intentionally left out of the
+                Contents side nav / section-nav row above) — this points to
+                other case studies, not a piece of this one's own narrative.
+                Still a plain sibling `.section` here rather than off on its
+                own, so it picks up the same :last-child rule that zeroes
+                out the trailing margin below Reflection whenever this is
+                what actually ends the page. */}
+            <section className={styles.section}>
+              <h2 className={styles.sectionHeading}>Next Up</h2>
+              <div className={styles.nextUp}>
+                {nextUpProjects.map((project) => {
+                  const compactHiddenTags = project.compactHiddenTags ?? []
+                  return (
+                    // Deliberately not <WorkCard> here — same underlying
+                    // project data, but this is the hero's plain
+                    // image-then-text presentation (see .nextUpImage below,
+                    // mirroring .hero), not the landing-page grid card's
+                    // bordered/colored-panel treatment.
+                    <Link key={project.title} to={project.href} className={styles.nextUpItem}>
+                      <img
+                        className={styles.nextUpImage}
+                        src={project.image}
+                        alt={project.imageAlt}
+                        loading="lazy"
+                        decoding="async"
+                      />
+                      <div className={`${workCardStyles.cardHeader} ${styles.nextUpHeader}`}>
+                        <div className={workCardStyles.tags}>
+                          {project.tags.map((tag) => (
+                            <span
+                              key={tag}
+                              className={
+                                compactHiddenTags.includes(tag)
+                                  ? `${workCardStyles.tag} ${workCardStyles.tagHiddenCompact}`
+                                  : workCardStyles.tag
+                              }
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                        {project.team && <span className={workCardStyles.team}>Team</span>}
+                      </div>
+                      <h3 className={styles.nextUpTitle}>{project.title}</h3>
+                      <p className={`${styles.nextUpDescription} body-s`}>
+                        {project.descriptionLines[0]}
+                        <br />
+                        {project.descriptionLines[1]}
+                      </p>
+                    </Link>
+                  )
+                })}
+              </div>
+            </section>
           </div>
         </div>
       </div>
