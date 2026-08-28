@@ -18,7 +18,6 @@ const TAGLINES = [
   'systems thinker',
   'visual storyteller',
   'problem solver',
-  'graphic design\nand advertising @ bu',
 ]
 
 const ILLUSTRATIONS = [
@@ -90,18 +89,9 @@ function Hero() {
           <TypewriterText as="h1" className={styles.headline} first="niki taradash" words={TAGLINES} />
 
           <p className={styles.body}>
-            <span className={styles.bodyDefault}>
-              designing intentional and beautiful experiences
-              <br />
-              that are driven by empathy
-            </span>
-            <span className={styles.bodyMobile}>
-              designing intentional
-              <br />
-              and beautiful experiences
-              <br />
-              that are driven by empathy
-            </span>
+            currently design student @ boston university
+            <br />
+            product design @ bendi wellness
           </p>
         </div>
       </div>

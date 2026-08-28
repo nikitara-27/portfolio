@@ -42,20 +42,6 @@
   color: var(--color-accent-green);
 }
 
-.bodyMobile {
-  display: none;
-}
-
-@media (max-width: 720px) {
-  .bodyDefault {
-    display: none;
-  }
-
-  .bodyMobile {
-    display: inline;
-  }
-}
-
 .scrollHint {
   position: absolute;
   z-index: 1;

@@ -91,9 +91,9 @@ function TypewriterText({
   className,
   first,
   words,
-  typeSpeed = 0.055,
+  typeSpeed = 0.09,
   deleteSpeed = 0.03,
-  holdTime = 1.4,
+  holdTime = 1.9,
 }) {
   const typedRef = useRef(null)
   useTypewriter(typedRef, { first, words, typeSpeed, deleteSpeed, holdTime })
