@@ -1,3 +1,9 @@
+/* .nav itself is just a full-bleed positioning strip, not the visible bar —
+   the pill (.capsule) is what actually renders, centered inside it.
+   pointer-events: none here (overridden back to auto on .capsule and the
+   mobile-only children below) so the empty space around the collapsed pill
+   doesn't steal hover/clicks from whatever's underneath it, e.g. Hero's
+   illustrations near the top of the page. */
 .nav {
   position: fixed;
   top: 0;
@@ -5,23 +11,76 @@
   right: 0;
   z-index: 10;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1.5rem;
-  padding: 1rem 2rem;
-  /* Frosted-glass: a light, semi-transparent tint (not full white) so the
-     sky animation/page content stays visible but softened, plus a blur so
-     it reads as glass rather than a plain tinted overlay. .opaque (other
-     pages) overrides background back to solid — backdrop-filter still
-     applies there too, but has no visible effect once nothing shows
-     through, so it's harmless left on. */
-  background: rgba(255, 255, 255, 0.55);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  justify-content: center;
+  padding-top: 1rem;
+  pointer-events: none;
 }
 
-.opaque {
-  background: var(--color-bg);
+/* The actual pill. Collapsed by default: a small dot with no visible
+   content (.capsuleContent is opacity: 0 below, and overflow: hidden clips
+   it regardless). Expanding grows width/height toward .capsuleExpanded's
+   larger box — both states keep the same 999px radius, so it reads as one
+   continuous pill stretching, stadium-shaped, rather than a shape change.
+   The expanded width itself isn't set here — see Nav.jsx's expandedWidth,
+   measured off .capsuleContent's own natural size so the pill lands
+   exactly as wide as "Niki Taradash · Work Play About · the two icons"
+   needs and nothing more, condensed and centered rather than stretched to
+   fill the viewport. */
+.capsule {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 38px;
+  padding: 0 1.75rem;
+  border-radius: 999px;
+  overflow: hidden;
+  pointer-events: auto;
+  cursor: pointer;
+  /* Frosted glass in the site's own green (--color-accent-green /
+     #425c2f), not the previous plain white tint — partial opacity so page
+     content scrolling behind the pill (and, once expanded, behind the bar)
+     stays subtly visible through the blur. */
+  background: rgba(var(--color-accent-green-rgb), 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition:
+    width 0.36s ease-out,
+    height 0.36s ease-out;
+}
+
+.capsuleExpanded {
+  /* width comes from Nav.jsx's inline style once measured; this is just
+     the fallback for the one frame before that measurement lands. */
+  width: fit-content;
+  height: 52px;
+}
+
+@media (max-width: 720px) {
+  .capsule {
+    display: none;
+  }
+}
+
+.capsuleContent {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex-shrink: 0;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.capsuleExpanded .capsuleContent {
+  opacity: 1;
+  pointer-events: auto;
+  /* Held back until the pill's own width/height growth (0.36s) is mostly
+     done, so the text/icons don't visibly stretch or reflow mid-animation
+     — they simply appear once there's already room for them. */
+  transition-delay: 0.15s;
 }
 
 .left {
@@ -55,8 +114,11 @@
     color 0.2s ease;
 }
 
+/* Lighter green (not the pill's own base green, which the icon would all
+   but vanish into) so the hover state stays visible against the dark
+   glass background. */
 .iconButton:hover {
-  background: var(--color-accent-green);
+  background: var(--color-accent-green-hover);
   color: #ffffff;
 }
 
@@ -65,25 +127,46 @@
   height: 15px;
 }
 
+.iconGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+/* Slightly smaller than .iconButton's own 34px base (used as-is in the
+   mobile menu, see .mobileIconRow) — scaled down to match the capsule's
+   own more condensed proportions at its 52px expanded height. */
+.iconGroup .iconButton {
+  width: 30px;
+  height: 30px;
+}
+
+.iconGroup .iconButton svg {
+  width: 13px;
+  height: 13px;
+}
+
+/* White, not --color-text (black) — both now sit on the dark green glass
+   pill/bar rather than the old light tint. */
 .wordmark {
   font-family: var(--font-family);
   font-weight: var(--font-weight-semibold);
   font-size: var(--font-size-h4);
-  color: var(--color-text);
+  color: #ffffff;
   white-space: nowrap;
 }
 
 .links {
   display: flex;
   align-items: center;
-  gap: 2rem;
+  gap: 1.5rem;
 }
 
 .link {
   font-family: var(--font-family);
   font-weight: var(--font-weight-semibold);
   font-size: var(--font-size-h4);
-  color: var(--color-text);
+  color: #ffffff;
   text-decoration: none;
   padding: 0.25rem 0.6rem;
   margin: -0.25rem -0.6rem;
@@ -92,9 +175,22 @@
   transition: background-color 0.2s ease;
 }
 
+/* A soft white overlay rather than the old light-beige one — against the
+   green glass background that reads clearly as a highlight without
+   fighting the white link text for contrast. */
 .link:hover,
 .link.active {
-  background: rgba(var(--color-divider-rgb), 0.5);
+  background: rgba(255, 255, 255, 0.18);
+}
+
+/* Mobile-only wordmark — centered in the bar independent of the
+   hamburger's own position (see .nav's flex layout under the mobile media
+   query below), hidden entirely above that breakpoint alongside it. */
+.mobileWordmark {
+  display: none;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
 }
 
 .hamburger {
@@ -108,6 +204,7 @@
   background: transparent;
   cursor: pointer;
   flex-shrink: 0;
+  pointer-events: auto;
 }
 
 .hamburgerLine {
@@ -154,19 +251,47 @@
 }
 
 @media (max-width: 720px) {
-  .links {
-    display: none;
+  /* Edge-to-edge bar again at mobile — back to the original white glass
+     treatment (the green now lives on .mobileMenu below instead, not the
+     bar itself), full-width and non-expanding rather than a floating
+     capsule. justify-content: flex-end keeps the hamburger pinned to its
+     existing right-side spot now that there's no left-side content (the
+     icons moved into .mobileMenu below); .mobileWordmark is taken out of
+     flow entirely (position: absolute, centered) so it stays dead-center
+     regardless of the hamburger's own width. */
+  .nav {
+    justify-content: flex-end;
+    align-items: center;
+    padding: 1rem 2rem;
+    pointer-events: auto;
+    background: rgba(255, 255, 255, 0.55);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+
+  .mobileWordmark {
+    display: block;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  /* .wordmark's shared rule is white for the desktop capsule's dark green
+     background — this bar is back to light/white, so its own wordmark
+     needs the original dark text instead. */
+  .mobileWordmark .wordmark {
+    color: var(--color-text);
   }
 
   .hamburger {
     display: block;
   }
 
-  /* Hides the header's own content while the menu is open — visibility
-     (not display: none) keeps its layout space intact, which is what
-     keeps .hamburger pinned to the exact same top-right spot via .nav's
-     own justify-content: space-between, regardless of menu state. */
-  .navMenuOpen .left {
+  /* Hides the header's own wordmark while the menu is open — visibility
+     (not display: none) keeps its layout space intact, matching the
+     hamburger's own fixed position regardless of menu state. */
+  .navMenuOpen .mobileWordmark {
     visibility: hidden;
   }
 
@@ -177,13 +302,17 @@
      the header's height. Harmless to drop while open: .mobileMenu's own
      background fully covers .nav visually at that point anyway. */
   .navMenuOpen {
+    background: transparent;
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
   }
 
   /* Full-screen overlay instead of a dropdown — position: fixed + inset: 0
      covers the header too. z-index: 9 sits below .hamburger's 11, so the
-     X stays visible and clickable on top of it. */
+     X stays visible and clickable on top of it. Light-opacity green glass
+     (not the bar's own white, and much lighter than the desktop capsule's
+     0.85 — .mobileLink/.mobileLinkActive's dark text needs to stay
+     readable over it, not stand out against a solid fill). */
   .mobileMenu {
     display: flex;
     flex-direction: column;
@@ -193,7 +322,7 @@
     inset: 0;
     z-index: 9;
     gap: 1rem;
-    background: rgba(var(--color-divider-rgb), 0.88);
+    background: rgba(var(--color-accent-green-rgb), 0.15);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     opacity: 0;
@@ -226,5 +355,15 @@
 
   .mobileLinkActive {
     color: var(--color-accent-green);
+  }
+
+  /* Email/LinkedIn, moved here from the header bar — sits below "About"
+     in the expanded menu list, reusing the same .iconButton circles the
+     desktop pill uses. */
+  .mobileIconRow {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 0.5rem;
   }
 }

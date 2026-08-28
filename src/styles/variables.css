@@ -11,6 +11,10 @@
   --color-divider-rgb: 222, 217, 209;
   --color-accent-green: #425c2f;
   --color-accent-green-hover: #607d4b;
+  /* Same color as --color-accent-green, as separate r/g/b components — for
+     Nav's glass-pill background, which needs a fractional alpha over the
+     page content scrolling behind it. */
+  --color-accent-green-rgb: 66, 92, 47;
 
   /* Type family */
   --font-family: 'Montserrat', sans-serif;
