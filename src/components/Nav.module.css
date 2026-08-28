@@ -37,12 +37,11 @@
   border-radius: 999px;
   overflow: hidden;
   pointer-events: auto;
-  cursor: pointer;
-  /* Frosted glass in the site's own green (--color-accent-green /
-     #425c2f), not the previous plain white tint — partial opacity so page
-     content scrolling behind the pill (and, once expanded, behind the bar)
-     stays subtly visible through the blur. */
-  background: rgba(var(--color-accent-green-rgb), 0.85);
+  /* Frosted glass in white (the previous green pill's own text/icon colors
+     below have flipped to match — see .wordmark/.link) — partial opacity so
+     page content scrolling behind the pill (and, once expanded, behind the
+     bar) stays subtly visible through the blur. */
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   transition:
@@ -89,6 +88,10 @@
   gap: 0.75rem;
 }
 
+/* Same hover box as .link below (padding/margin/border-radius/background
+   are duplicated rather than shared via a second className, since the two
+   also need their own distinct flex/gap layout) — a highlight on hover
+   signals this acts as a nav link too, not just static text. */
 .homeButton {
   display: flex;
   align-items: center;
@@ -96,6 +99,11 @@
   text-decoration: none;
   color: inherit;
   cursor: pointer;
+  padding: 0.25rem 0.6rem;
+  margin: -0.25rem -0.6rem;
+  border-radius: 999px;
+  background: transparent;
+  transition: background-color 0.2s ease;
 }
 
 .iconButton {
@@ -114,9 +122,9 @@
     color 0.2s ease;
 }
 
-/* Lighter green (not the pill's own base green, which the icon would all
-   but vanish into) so the hover state stays visible against the dark
-   glass background. */
+/* The site's mid-tone green (not the darker base accent green, which would
+   read too close to .iconButton's own icon color) for a hover state that's
+   clearly a state change against the button's own light cream circle. */
 .iconButton:hover {
   background: var(--color-accent-green-hover);
   color: #ffffff;
@@ -146,13 +154,15 @@
   height: 13px;
 }
 
-/* White, not --color-text (black) — both now sit on the dark green glass
-   pill/bar rather than the old light tint. */
+/* --color-accent-green (#425c2f — the same token WorkCard's .tag pills use)
+   rather than --color-text (black) or white — the pill/bar is back to a
+   white glass background, so the text carries the site's own green instead
+   of contrasting against it. */
 .wordmark {
   font-family: var(--font-family);
   font-weight: var(--font-weight-semibold);
   font-size: var(--font-size-h4);
-  color: #ffffff;
+  color: var(--color-accent-green);
   white-space: nowrap;
 }
 
@@ -166,7 +176,7 @@
   font-family: var(--font-family);
   font-weight: var(--font-weight-semibold);
   font-size: var(--font-size-h4);
-  color: #ffffff;
+  color: var(--color-accent-green);
   text-decoration: none;
   padding: 0.25rem 0.6rem;
   margin: -0.25rem -0.6rem;
@@ -175,12 +185,16 @@
   transition: background-color 0.2s ease;
 }
 
-/* A soft white overlay rather than the old light-beige one — against the
-   green glass background that reads clearly as a highlight without
-   fighting the white link text for contrast. */
+/* A soft green tint (the same --color-accent-green-rgb the icon buttons'
+   own hover leans on elsewhere) rather than the old white overlay — that
+   read fine against the pill's previous dark green background but all but
+   disappears against today's white one. .homeButton gets the identical
+   treatment so "Niki Taradash" reads as clickable the same way Work/Play/
+   About do. */
 .link:hover,
-.link.active {
-  background: rgba(255, 255, 255, 0.18);
+.link.active,
+.homeButton:hover {
+  background: rgba(var(--color-accent-green-rgb), 0.12);
 }
 
 /* Mobile-only wordmark — centered in the bar independent of the
@@ -277,9 +291,9 @@
     transform: translate(-50%, -50%);
   }
 
-  /* .wordmark's shared rule is white for the desktop capsule's dark green
-     background — this bar is back to light/white, so its own wordmark
-     needs the original dark text instead. */
+  /* .wordmark's shared rule is now green, for the desktop capsule's own
+     white background — this bar has always been light/white (unaffected by
+     that pill), so its own wordmark keeps the original dark text instead. */
   .mobileWordmark .wordmark {
     color: var(--color-text);
   }

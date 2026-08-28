@@ -25,15 +25,15 @@ function Nav({ onHomeClick }) {
   const [menuVisuallyOpen, setMenuVisuallyOpen] = useState(false)
   const mobileMenuRef = useRef(null)
 
-  // Desktop/tablet only (see .capsule's display: none below 720px) — the
-  // pill starts collapsed and, once expanded by any trigger, never
-  // collapses back. Nav itself is rendered once outside <Routes> (see
-  // App.jsx), so it never unmounts on route changes — this state living
-  // here rather than in a page component is what makes "stays expanded for
-  // the rest of the session" the default behavior with no extra plumbing:
-  // a route change simply doesn't touch it.
+  // Desktop/tablet only (see .capsule's display: none below 720px) — starts
+  // collapsed for one frame, then opens itself shortly after mount (below)
+  // and stays that way permanently; nothing collapses it back. Nav itself
+  // is rendered once outside <Routes> (see App.jsx), so it never unmounts
+  // on route changes — this state living here rather than in a page
+  // component is what makes "stays expanded for the rest of the session"
+  // the default behavior with no extra plumbing: a route change simply
+  // doesn't touch it.
   const [expanded, setExpanded] = useState(false)
-  const expandNav = () => setExpanded(true)
 
   // Expanded width is measured, not a fixed/percentage value — the pill
   // should end up exactly as wide as "Niki Taradash · Work Play About ·
@@ -64,18 +64,14 @@ function Nav({ onHomeClick }) {
     return () => observer.disconnect()
   }, [])
 
-  // Auto-expand on the user's first scroll anywhere on the page. `{ once:
-  // true }` is the whole guarantee here — the listener detaches itself
-  // after the very first scroll event, so a smooth-scrolled gesture that
-  // fires many native scroll events in a row (Lenis eases toward the
-  // target over ~1.4s, each animation frame is its own event) still only
-  // ever triggers this once. Skipped once already expanded (by hover/click
-  // instead) so there's nothing left to listen for.
+  // Opens automatically shortly after mount — not on the very first paint,
+  // so the pill actually renders collapsed for a beat first and the width/
+  // height grow (.capsule's own transition) has something to animate from,
+  // rather than the bar just appearing already-open with no motion at all.
   useEffect(() => {
-    if (expanded) return undefined
-    window.addEventListener('scroll', expandNav, { once: true, passive: true })
-    return () => window.removeEventListener('scroll', expandNav)
-  }, [expanded])
+    const timer = setTimeout(() => setExpanded(true), 200)
+    return () => clearTimeout(timer)
+  }, [])
 
   const openMenu = () => {
     setMenuOpen(true)
@@ -115,16 +111,14 @@ function Nav({ onHomeClick }) {
 
   return (
     <nav className={navClassName}>
-      {/* Desktop/tablet pill — collapsed to a small dot by default (see
-          .capsule), expanded by hovering/clicking it or by the user's first
-          scroll (above). Hidden entirely on mobile; see .mobileWordmark/
-          .hamburger/.mobileMenu below for that breakpoint's own bar. */}
+      {/* Desktop/tablet pill — collapses to a small dot for one frame, then
+          opens itself automatically (above) and stays open. Hidden entirely
+          on mobile; see .mobileWordmark/.hamburger/.mobileMenu below for
+          that breakpoint's own bar. */}
       <div
         className={capsuleClassName}
         ref={capsuleRef}
         style={expanded && expandedWidth ? { width: `${expandedWidth}px` } : undefined}
-        onMouseEnter={expandNav}
-        onClick={expandNav}
       >
         <div className={styles.capsuleContent} ref={capsuleContentRef}>
           <div className={styles.left}>
