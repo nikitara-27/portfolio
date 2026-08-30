@@ -12,14 +12,6 @@ import styles from './Hero.module.css'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const TAGLINES = [
-  'ui/ux',
-  'product designer',
-  'systems thinker',
-  'visual storyteller',
-  'problem solver',
-]
-
 const ILLUSTRATIONS = [
   { src: mangoIcon, alt: 'A mango', rotation: -10, left: '4%', bottom: '9%', width: 'min(11vw, 90px)', fallDistance: 380, fallDelay: 0.1 },
   { src: catIcon, alt: 'My cat, Gwen, sitting', rotation: 7, left: '16%', bottom: '5%', width: 'min(13vw, 105px)', fallDistance: 460, fallDelay: 0.3 },
@@ -86,7 +78,7 @@ function Hero() {
         ))}
 
         <div className={styles.content}>
-          <TypewriterText as="h1" className={styles.headline} first="niki taradash" words={TAGLINES} />
+          <TypewriterText as="h1" className={styles.headline} text="niki taradash" />
 
           <p className={styles.body}>
             currently design student @ boston university

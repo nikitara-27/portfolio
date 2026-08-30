@@ -2,7 +2,13 @@
   white-space: pre-line;
 }
 
-.typed::after {
+/* Only rendered while .caret or .caretFinal is present (both added/removed
+   by TypewriterText.jsx) — nothing while idle, an infinite blink during
+   typing (.caret), then exactly one more full blink as typing finishes
+   (.caretFinal, same keyframes but a single iteration) before it's removed
+   from the DOM for good. */
+.typed.caret::after,
+.typed.caretFinal::after {
   content: '';
   display: inline-block;
   width: 0.08em;
@@ -10,7 +16,17 @@
   margin-left: 0.06em;
   background: var(--color-text);
   vertical-align: -0.05em;
+}
+
+.typed.caret::after {
   animation: caret-blink 0.9s steps(1) infinite;
+}
+
+/* Shorter cycle than .caret's own 0.9s — the final blink should read as a
+   quick, snappy sign-off, not the same leisurely pace as the blink that was
+   running throughout typing. */
+.typed.caretFinal::after {
+  animation: caret-blink 0.4s steps(1) 1;
 }
 
 @keyframes caret-blink {
