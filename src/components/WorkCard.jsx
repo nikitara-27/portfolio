@@ -177,7 +177,11 @@ function WorkCard({ project, priority = false }) {
   const cardTagProps = project.href ? { to: project.href } : {}
 
   return (
-    <CardTag className={styles.card} ref={cardRef} {...cardTagProps}>
+    // data-no-cursor-trail: read by CursorEffects to stop spawning trail
+    // stars while over this card's full bounds (image, pills, title,
+    // blurb) — independent of the border/shadow/scale/video-swap hover
+    // handled above, which stays untouched.
+    <CardTag className={styles.card} ref={cardRef} data-no-cursor-trail {...cardTagProps}>
       <div className={styles.media}>
         <img
           src={project.image}

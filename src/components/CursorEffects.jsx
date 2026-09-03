@@ -67,6 +67,7 @@ function CursorEffects() {
     let ticking = false
     let skyRect = null
     let dotOverSky = null
+    let cardRects = []
 
     // A rect-based, non-layout-forcing stand-in for elementFromPoint(). Calling
     // elementFromPoint() every frame (or every star spawn) forces a synchronous
@@ -80,11 +81,26 @@ function CursorEffects() {
     }
     const isOverSky = (x, y) => !!skyRect && x >= skyRect.left && x <= skyRect.right && y >= skyRect.top && y <= skyRect.bottom
 
+    // Same rect-cache approach as the sky zone above, but for every case
+    // study card at once (see WorkCard.jsx's data-no-cursor-trail) — there
+    // can be several on screen, so this checks a list rather than one rect.
+    // Only ever matches anything on the landing page, since that's the only
+    // place a WorkCard renders; elsewhere the querySelectorAll is just empty.
+    const readCardRects = () => {
+      cardRects = [...document.querySelectorAll('[data-no-cursor-trail]')].map((el) => el.getBoundingClientRect())
+    }
+    const isOverCard = (x, y) =>
+      cardRects.some((r) => x >= r.left && x <= r.right && y >= r.top && y <= r.bottom)
+
     readSkyRect()
+    readCardRects()
 
     const tick = () => {
       frame++
-      if (frame % 10 === 0) readSkyRect()
+      if (frame % 10 === 0) {
+        readSkyRect()
+        readCardRects()
+      }
       if (frame % 20 === 0) {
         const now = performance.now()
         setCursorStars((prev) => {
@@ -112,7 +128,7 @@ function CursorEffects() {
         const shouldSpawn = !last || Math.hypot(current.x - last.x, current.y - last.y) >= CURSOR_STAR_SPACING
         if (shouldSpawn) {
           lastSpawnPosRef.current = { x: current.x, y: current.y }
-          if (!trailDisabledRef.current) {
+          if (!trailDisabledRef.current && !isOverCard(current.x, current.y)) {
             const id = starIdRef.current++
             const overSky = isOverSky(current.x, current.y)
             setCursorStars((prev) => [...prev.slice(-(CURSOR_STAR_MAX - 1)), makeCursorStar(id, current.x, current.y, overSky)])
