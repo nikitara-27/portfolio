@@ -103,11 +103,6 @@
   margin: 0.75rem 0 0;
 }
 
-.placeholder {
-  color: var(--color-muted);
-  font-style: italic;
-}
-
 .tagRow {
   display: flex;
   flex-wrap: wrap;

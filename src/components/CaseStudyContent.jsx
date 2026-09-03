@@ -123,10 +123,6 @@ export function Caption({ children }) {
   return <p className={styles.caption}>{children}</p>
 }
 
-export function Placeholder({ children }) {
-  return <p className={styles.placeholder}>{children}</p>
-}
-
 // A vertical stack of ReflectionCards (e.g. the Reflection section) — the
 // gap and the mismatched corner radii that make the stack read as one
 // continuous shape (rather than independent cards) live on this wrapper,

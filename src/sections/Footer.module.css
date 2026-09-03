@@ -383,6 +383,11 @@
     gap: 0.4rem;
   }
 
+  /* A one-off shrink scoped to this link list only — not drawn from
+     --font-size-body (which .link uses at desktop, above), since that
+     token is shared with Hero/CaseStudyLayout/CaseStudyContent body text
+     and redefining it at this breakpoint would shrink all of that too,
+     not just these footer links. */
   .link {
     font-size: 0.875rem;
   }
