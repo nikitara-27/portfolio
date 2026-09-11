@@ -61,7 +61,7 @@ const ILLUSTRATIONS = [
     width: 'min(11.5vw, 92px)',
     fallDistance: 340,
     fallDelay: 0.7,
-    bubbleText: 'i love content creation across all breakpoints',
+    bubbleText: 'i love content creation',
     bubbleTextMobile: 'i love\ncontent creation',
   },
 ]
