@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { FiMail } from 'react-icons/fi'
 import { FaLinkedin } from 'react-icons/fa'
@@ -24,54 +24,6 @@ function Nav({ onHomeClick }) {
   // box before it finishes fading — the "leftover frame" flash.
   const [menuVisuallyOpen, setMenuVisuallyOpen] = useState(false)
   const mobileMenuRef = useRef(null)
-
-  // Desktop/tablet only (see .capsule's display: none below 720px) — starts
-  // collapsed for one frame, then opens itself shortly after mount (below)
-  // and stays that way permanently; nothing collapses it back. Nav itself
-  // is rendered once outside <Routes> (see App.jsx), so it never unmounts
-  // on route changes — this state living here rather than in a page
-  // component is what makes "stays expanded for the rest of the session"
-  // the default behavior with no extra plumbing: a route change simply
-  // doesn't touch it.
-  const [expanded, setExpanded] = useState(false)
-
-  // Expanded width is measured, not a fixed/percentage value — the pill
-  // should end up exactly as wide as "Niki Taradash · Work Play About ·
-  // the two icons" actually needs, condensed and centered, rather than
-  // stretching to fill the viewport. capsuleContentRef's own natural width
-  // (it's never itself given an explicit width, so it's always sized to
-  // its content) plus the capsule's own horizontal padding is that target.
-  // Read via ResizeObserver rather than measured once, so a breakpoint's
-  // font-size change (see variables.css's tablet/mobile type scale) or any
-  // other reflow keeps this in sync.
-  const capsuleRef = useRef(null)
-  const capsuleContentRef = useRef(null)
-  const [expandedWidth, setExpandedWidth] = useState(null)
-
-  useLayoutEffect(() => {
-    const capsule = capsuleRef.current
-    const content = capsuleContentRef.current
-    if (!capsule || !content) return undefined
-
-    const measure = () => {
-      const paddingX = parseFloat(getComputedStyle(capsule).paddingLeft) + parseFloat(getComputedStyle(capsule).paddingRight)
-      setExpandedWidth(content.scrollWidth + paddingX)
-    }
-    measure()
-
-    const observer = new ResizeObserver(measure)
-    observer.observe(content)
-    return () => observer.disconnect()
-  }, [])
-
-  // Opens automatically shortly after mount — not on the very first paint,
-  // so the pill actually renders collapsed for a beat first and the width/
-  // height grow (.capsule's own transition) has something to animate from,
-  // rather than the bar just appearing already-open with no motion at all.
-  useEffect(() => {
-    const timer = setTimeout(() => setExpanded(true), 200)
-    return () => clearTimeout(timer)
-  }, [])
 
   const openMenu = () => {
     setMenuOpen(true)
@@ -107,57 +59,45 @@ function Nav({ onHomeClick }) {
   }
 
   const navClassName = [styles.nav, menuVisuallyOpen && styles.navMenuOpen].filter(Boolean).join(' ')
-  const capsuleClassName = [styles.capsule, expanded && styles.capsuleExpanded].filter(Boolean).join(' ')
 
   return (
     <nav className={navClassName}>
-      {/* Desktop/tablet pill — collapses to a small dot for one frame, then
-          opens itself automatically (above) and stays open. Hidden entirely
-          on mobile; see .mobileWordmark/.hamburger/.mobileMenu below for
-          that breakpoint's own bar. */}
-      <div
-        className={capsuleClassName}
-        ref={capsuleRef}
-        style={expanded && expandedWidth ? { width: `${expandedWidth}px` } : undefined}
-      >
-        <div className={styles.capsuleContent} ref={capsuleContentRef}>
-          <div className={styles.left}>
-            <Link to="/" className={styles.homeButton} aria-label="Back to home" onClick={handleHomeClick}>
-              <h4 className={styles.wordmark}>Niki Taradash</h4>
-            </Link>
-          </div>
-
-          <div className={styles.links}>
-            <Link to="/" className={styles.link} onClick={handleWorkClick}>
-              Work
-            </Link>
-            <Link to="/play" className={pathname === '/play' ? `${styles.link} ${styles.active}` : styles.link}>
-              Play
-            </Link>
-            <Link to="/about" className={pathname === '/about' ? `${styles.link} ${styles.active}` : styles.link}>
-              About
-            </Link>
-          </div>
-
-          <div className={styles.iconGroup}>
-            <a href={`mailto:${EMAIL}`} className={styles.iconButton} aria-label="Email Niki">
-              <FiMail />
-            </a>
-            <a
-              href={LINKEDIN_URL}
-              target="_blank"
-              rel="noreferrer"
-              className={styles.iconButton}
-              aria-label="Niki's LinkedIn profile"
-            >
-              <FaLinkedin />
-            </a>
-          </div>
-        </div>
+      {/* Desktop/tablet — a standard full-width sticky bar (not the earlier
+          expandable pill): wordmark + icons on the left, nav links on the
+          right, always fully visible. Hidden entirely on mobile; see
+          .mobileWordmark/.hamburger/.mobileMenu below for that
+          breakpoint's own bar. */}
+      <div className={styles.left}>
+        <Link to="/" className={styles.homeButton} aria-label="Back to home" onClick={handleHomeClick}>
+          <h4 className={styles.wordmark}>Niki Taradash</h4>
+        </Link>
+        <a href={`mailto:${EMAIL}`} className={styles.iconButton} aria-label="Email Niki">
+          <FiMail />
+        </a>
+        <a
+          href={LINKEDIN_URL}
+          target="_blank"
+          rel="noreferrer"
+          className={styles.iconButton}
+          aria-label="Niki's LinkedIn profile"
+        >
+          <FaLinkedin />
+        </a>
       </div>
 
-      {/* Mobile-only wordmark, centered in the bar independent of the
-          hamburger's own flex slot — see .mobileWordmark. */}
+      <div className={styles.links}>
+        <Link to="/" className={styles.link} onClick={handleWorkClick}>
+          Work
+        </Link>
+        <Link to="/play" className={pathname === '/play' ? `${styles.link} ${styles.active}` : styles.link}>
+          Play
+        </Link>
+        <Link to="/about" className={pathname === '/about' ? `${styles.link} ${styles.active}` : styles.link}>
+          About
+        </Link>
+      </div>
+
+      {/* Mobile-only wordmark, left-aligned — see .mobileWordmark. */}
       <Link to="/" className={styles.mobileWordmark} aria-label="Back to home" onClick={handleHomeClick}>
         <h4 className={styles.wordmark}>Niki Taradash</h4>
       </Link>
@@ -202,9 +142,8 @@ function Nav({ onHomeClick }) {
           About
         </Link>
 
-        {/* Email/LinkedIn moved here from the header bar itself (see
-            .capsule's .iconGroup, desktop-only) — mobile keeps only the
-            wordmark and hamburger in the bar proper. */}
+        {/* Email/LinkedIn moved here from the header bar itself — mobile
+            keeps only the wordmark and hamburger in the bar proper. */}
         <div className={styles.mobileIconRow}>
           <a href={`mailto:${EMAIL}`} className={styles.iconButton} aria-label="Email Niki" onClick={closeMenu}>
             <FiMail />

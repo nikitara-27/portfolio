@@ -28,6 +28,15 @@
   position: absolute;
   left: 50%;
   bottom: 100%;
+  /* .stickerRoot (the containing block) is only as wide as the icon itself
+     (~90-120px) — without this, the browser's shrink-to-fit width
+     calculation for an absolutely-positioned auto-width box gets bounded
+     by that narrow containing block instead of the text's own natural
+     width, wrapping every single word onto its own line. max-content
+     sizes purely off the text (ignoring the containing block), so the
+     only wraps that happen are the explicit "\n"s in bubbleText/
+     bubbleTextMobile — see pre-line below. */
+  width: max-content;
   z-index: 5;
   margin-bottom: var(--bubble-gap, 20px);
   background: #fff;
@@ -35,13 +44,20 @@
   font-family: var(--font-family);
   font-weight: var(--font-weight-normal);
   font-size: var(--font-size-sticker-bubble);
-  white-space: nowrap;
+  /* pre-line (not nowrap) so an explicit "\n" in bubbleText — see mango/
+     camera in Hero.jsx — actually breaks onto a second line; text without
+     one still renders on a single line exactly as before, since nothing
+     here constrains the box's width to force a wrap. */
+  white-space: pre-line;
   padding: 0.5rem 0.9rem;
   border-radius: 14px;
   border: 1.5px solid #000;
   opacity: 0;
   pointer-events: none;
-  transform: translate(-50%, 6px) scale(0.9);
+  /* --bubble-shift: how far to nudge the whole bubble left/right to stay
+     on screen near a viewport edge — 0px (a no-op) unless
+     DraggableSticker.jsx's positionBubble() set it just before reveal. */
+  transform: translate(calc(-50% + var(--bubble-shift, 0px)), 6px) scale(0.9);
   transition:
     opacity 0.15s ease,
     transform 0.15s cubic-bezier(0.22, 1, 0.36, 1);
@@ -50,7 +66,11 @@
 .bubble::before {
   content: '';
   position: absolute;
-  left: 50%;
+  /* --bubble-tail-left: counters --bubble-shift above (in px, from the
+     bubble's own left edge, clamped — see positionBubble()) so the tail
+     stays visually under the icon even once the bubble body itself has
+     shifted to stay on screen. Falls back to the original 50% when unset. */
+  left: var(--bubble-tail-left, 50%);
   top: 100%;
   transform: translateX(-50%);
   width: 0;
@@ -63,7 +83,7 @@
 .bubble::after {
   content: '';
   position: absolute;
-  left: 50%;
+  left: var(--bubble-tail-left, 50%);
   top: calc(100% - 1.6px);
   transform: translateX(-50%);
   width: 0;
@@ -73,8 +93,46 @@
   border-top: 5.5px solid #fff;
 }
 
-.stickerRoot:hover .bubble {
+/* Default (non-inputAware, e.g. About's stickers): unchanged, plain :hover,
+   on any device. Excludes .hoverReveal (the landing hero's icons) so the
+   two modes below — which need the media-query gate — aren't also matched
+   by this ungated rule. */
+.stickerRoot:not(.hoverReveal):hover .bubble {
   opacity: 1;
   pointer-events: auto;
-  transform: translate(-50%, 0) scale(1);
+  transform: translate(calc(-50% + var(--bubble-shift, 0px)), 0) scale(1);
+}
+
+/* inputAware, hover-capable device (desktop): same reveal, but only where
+   (hover: hover) and (pointer: fine) actually holds — mirrors the
+   matchMedia check in DraggableSticker.jsx so CSS and JS never disagree
+   about which devices count as "hover-capable". */
+@media (hover: hover) and (pointer: fine) {
+  .stickerRoot.hoverReveal:hover .bubble {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translate(calc(-50% + var(--bubble-shift, 0px)), 0) scale(1);
+  }
+
+  /* Higher specificity than the rule above (one more class) — wins without
+     needing !important. Force-hidden for the whole drag, added/removed by
+     onPress/onRelease in DraggableSticker.jsx, since :hover alone stays
+     true the entire time (the pointer never leaves the element while
+     dragging it). */
+  .stickerRoot.hoverReveal.dragging:hover .bubble {
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+
+/* inputAware, not hover-capable (tablet/mobile): opened by tapping the
+   sticker instead of :hover — see the click/pointerdown handlers in
+   DraggableSticker.jsx. Not media-gated itself since JS already only ever
+   adds this class on a non-hover-capable device (and removes it the
+   instant one gains hover capability), so there's nothing for a media
+   query here to additionally guard against. */
+.stickerRoot.bubbleOpen .bubble {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(calc(-50% + var(--bubble-shift, 0px)), 0) scale(1);
 }

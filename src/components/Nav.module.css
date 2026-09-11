@@ -1,9 +1,7 @@
-/* .nav itself is just a full-bleed positioning strip, not the visible bar —
-   the pill (.capsule) is what actually renders, centered inside it.
-   pointer-events: none here (overridden back to auto on .capsule and the
-   mobile-only children below) so the empty space around the collapsed pill
-   doesn't steal hover/clicks from whatever's underneath it, e.g. Hero's
-   illustrations near the top of the page. */
+/* Standard sticky bar, edge-to-edge — desktop/tablet. Frosted-glass: a
+   light, semi-transparent white tint plus a blur so it reads as glass
+   rather than a plain tinted overlay, while page content stays visible
+   (softened) scrolling behind it. */
 .nav {
   position: fixed;
   top: 0;
@@ -11,75 +9,13 @@
   right: 0;
   z-index: 10;
   display: flex;
-  justify-content: center;
-  padding-top: 1rem;
-  pointer-events: none;
-}
-
-/* The actual pill. Collapsed by default: a small dot with no visible
-   content (.capsuleContent is opacity: 0 below, and overflow: hidden clips
-   it regardless). Expanding grows width/height toward .capsuleExpanded's
-   larger box — both states keep the same 999px radius, so it reads as one
-   continuous pill stretching, stadium-shaped, rather than a shape change.
-   The expanded width itself isn't set here — see Nav.jsx's expandedWidth,
-   measured off .capsuleContent's own natural size so the pill lands
-   exactly as wide as "Niki Taradash · Work Play About · the two icons"
-   needs and nothing more, condensed and centered rather than stretched to
-   fill the viewport. */
-.capsule {
-  position: relative;
-  display: flex;
   align-items: center;
-  justify-content: center;
-  width: 64px;
-  height: 38px;
-  padding: 0 1.75rem;
-  border-radius: 999px;
-  overflow: hidden;
-  pointer-events: auto;
-  /* Frosted glass in white (the previous green pill's own text/icon colors
-     below have flipped to match — see .wordmark/.link) — partial opacity so
-     page content scrolling behind the pill (and, once expanded, behind the
-     bar) stays subtly visible through the blur. */
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1rem 2rem;
   background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  transition:
-    width 0.36s ease-out,
-    height 0.36s ease-out;
-}
-
-.capsuleExpanded {
-  /* width comes from Nav.jsx's inline style once measured; this is just
-     the fallback for the one frame before that measurement lands. */
-  width: fit-content;
-  height: 52px;
-}
-
-@media (max-width: 720px) {
-  .capsule {
-    display: none;
-  }
-}
-
-.capsuleContent {
-  display: flex;
-  align-items: center;
-  gap: 2rem;
-  flex-shrink: 0;
-  white-space: nowrap;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.2s ease;
-}
-
-.capsuleExpanded .capsuleContent {
-  opacity: 1;
-  pointer-events: auto;
-  /* Held back until the pill's own width/height growth (0.36s) is mostly
-     done, so the text/icons don't visibly stretch or reflow mid-animation
-     — they simply appear once there's already room for them. */
-  transition-delay: 0.15s;
 }
 
 .left {
@@ -122,9 +58,6 @@
     color 0.2s ease;
 }
 
-/* The site's mid-tone green (not the darker base accent green, which would
-   read too close to .iconButton's own icon color) for a hover state that's
-   clearly a state change against the button's own light cream circle. */
 .iconButton:hover {
   background: var(--color-accent-green-hover);
   color: #ffffff;
@@ -135,29 +68,8 @@
   height: 15px;
 }
 
-.iconGroup {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-}
-
-/* Slightly smaller than .iconButton's own 34px base (used as-is in the
-   mobile menu, see .mobileIconRow) — scaled down to match the capsule's
-   own more condensed proportions at its 52px expanded height. */
-.iconGroup .iconButton {
-  width: 30px;
-  height: 30px;
-}
-
-.iconGroup .iconButton svg {
-  width: 13px;
-  height: 13px;
-}
-
 /* --color-accent-green (#425c2f — the same token WorkCard's .tag pills use)
-   rather than --color-text (black) or white — the pill/bar is back to a
-   white glass background, so the text carries the site's own green instead
-   of contrasting against it. */
+   against the bar's white glass background. */
 .wordmark {
   font-family: var(--font-family);
   font-weight: var(--font-weight-semibold);
@@ -185,12 +97,9 @@
   transition: background-color 0.2s ease;
 }
 
-/* A soft green tint (the same --color-accent-green-rgb the icon buttons'
-   own hover leans on elsewhere) rather than the old white overlay — that
-   read fine against the pill's previous dark green background but all but
-   disappears against today's white one. .homeButton gets the identical
-   treatment so "Niki Taradash" reads as clickable the same way Work/Play/
-   About do. */
+/* A soft green tint (--color-accent-green-rgb, the same token the icon
+   buttons' own hover leans on) — .homeButton gets the identical treatment
+   so "Niki Taradash" reads as clickable the same way Work/Play/About do. */
 .link:hover,
 .link.active,
 .homeButton:hover {
@@ -218,7 +127,6 @@
   background: transparent;
   cursor: pointer;
   flex-shrink: 0;
-  pointer-events: auto;
 }
 
 .hamburgerLine {
@@ -265,35 +173,28 @@
 }
 
 @media (max-width: 720px) {
-  /* Edge-to-edge bar again at mobile — back to the original white glass
-     treatment (the green now lives on .mobileMenu below instead, not the
-     bar itself), full-width and non-expanding rather than a floating
-     capsule. justify-content: flex-end keeps the hamburger pinned to its
-     existing right-side spot now that there's no left-side content (the
-     icons moved into .mobileMenu below); .mobileWordmark is taken out of
-     flow entirely (position: absolute, centered) so it stays dead-center
-     regardless of the hamburger's own width. */
+  /* Edge-to-edge bar, same as desktop/tablet but full-width and with both
+     .left and .links hidden (the wordmark/hamburger below replace them;
+     the icons move into .mobileMenu below). space-between puts
+     .mobileWordmark (the only other in-flow child left once .left/.links
+     are hidden) at the left edge and keeps .hamburger at the right, its
+     existing spot. */
   .nav {
-    justify-content: flex-end;
-    align-items: center;
-    padding: 1rem 2rem;
-    pointer-events: auto;
-    background: rgba(255, 255, 255, 0.55);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
+    justify-content: space-between;
+  }
+
+  .left,
+  .links {
+    display: none;
   }
 
   .mobileWordmark {
     display: block;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
   }
 
-  /* .wordmark's shared rule is now green, for the desktop capsule's own
-     white background — this bar has always been light/white (unaffected by
-     that pill), so its own wordmark keeps the original dark text instead. */
+  /* .wordmark's shared rule is green for the desktop/tablet bar — this bar
+     has always been light/white too, but keeps the original dark text
+     instead, unrelated to that choice. */
   .mobileWordmark .wordmark {
     color: var(--color-text);
   }
@@ -324,9 +225,8 @@
   /* Full-screen overlay instead of a dropdown — position: fixed + inset: 0
      covers the header too. z-index: 9 sits below .hamburger's 11, so the
      X stays visible and clickable on top of it. Light-opacity green glass
-     (not the bar's own white, and much lighter than the desktop capsule's
-     0.85 — .mobileLink/.mobileLinkActive's dark text needs to stay
-     readable over it, not stand out against a solid fill). */
+     — .mobileLink/.mobileLinkActive's dark text needs to stay readable
+     over it, not stand out against a solid fill. */
   .mobileMenu {
     display: flex;
     flex-direction: column;
@@ -373,7 +273,7 @@
 
   /* Email/LinkedIn, moved here from the header bar — sits below "About"
      in the expanded menu list, reusing the same .iconButton circles the
-     desktop pill uses. */
+     desktop/tablet bar uses. */
   .mobileIconRow {
     display: flex;
     align-items: center;

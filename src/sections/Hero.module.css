@@ -12,6 +12,12 @@
   justify-content: center;
   overflow: hidden;
   border-radius: 0px;
+  /* Nothing inside is interactive (just the headline/subtext), but this
+     box still spans the entire hero edge-to-edge and, with no z-index,
+     paints above the sticker icons now that they're siblings rendered
+     before it (see Hero.jsx) — without this, it silently intercepts
+     hover/click/drag everywhere except where .content's own text sits. */
+  pointer-events: none;
 }
 
 .content {

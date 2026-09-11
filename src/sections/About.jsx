@@ -4,7 +4,7 @@ import photo from '../assets/images/niki-taradash1.jpg'
 import catIcon from '../assets/icons/cat-sit.svg'
 import matchaIcon from '../assets/icons/matcha-latte.svg'
 import cableCarIcon from '../assets/icons/cable-car.png'
-import DraggableSticker from '../components/DraggableSticker'
+import DraggableSticker, { STICKER_HINT_SEEN_KEY } from '../components/DraggableSticker'
 import Footer from './Footer'
 import styles from './About.module.css'
 
@@ -12,11 +12,6 @@ import styles from './About.module.css'
 // stable, unhashed URL to link to directly rather than going through
 // Vite's asset pipeline.
 const RESUME_PDF_URL = '/niki-taradash-resume.pdf'
-
-// Shows the stickers' hover-lift "you can drag this" hint on a visitor's
-// first visit only, then never again — persisted (not sessionStorage) since
-// the point is a one-time introduction, not a once-per-session reminder.
-const STICKER_HINT_SEEN_KEY = 'stickerHintSeen'
 
 const BODY_PARAGRAPHS = [
   'I am a senior graphic design and advertising dual-degree student at Boston University.',
