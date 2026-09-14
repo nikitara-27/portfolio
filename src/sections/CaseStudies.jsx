@@ -10,19 +10,6 @@ import styles from './CaseStudies.module.css'
 // drifting out of sync with these cards.
 export const PROJECTS = [
   {
-    title: 'Immigration Enforcement Reporter',
-    descriptionLines: ['Stepping in as sole designer to research and improve', 'an existing civic mapping tool.'],
-    tags: ['In Progress', 'UX Research', 'Competitive Analysis'],
-    compactHiddenTags: ['Competitive Analysis'],
-    team: true,
-    href: '/work/immigrationenforcementreporter',
-    image: luceMockup,
-    imageAlt: 'Immigration Enforcement Reporter mapping tool shown on a desktop monitor',
-    // Single clip -- the crossfade loop just replays it seamlessly between
-    // the two buffered <video> slots (see WorkCard's advance()/preloadNext).
-    previewVideos: ['/videos/luce-demo.mp4'],
-  },
-  {
     title: 'Homeward Scoring Platform',
     descriptionLines: ['A digital scoring tool designed to support Homeward’s', 'physical board game.'],
     tags: ['Urban Planning', 'UX Research', 'UX Design Practicum'],
@@ -39,6 +26,19 @@ export const PROJECTS = [
       '/videos/homeward-pop-up.mov',
       '/videos/homeward-disruptor-cards.mp4',
     ],
+  },
+  {
+    title: 'Immigration Enforcement Reporter',
+    descriptionLines: ['Stepping in as sole designer to research and improve', 'an existing civic mapping tool.'],
+    tags: ['In Progress', 'UX Research', 'Competitive Analysis'],
+    compactHiddenTags: ['Competitive Analysis'],
+    team: true,
+    href: '/work/immigrationenforcementreporter',
+    image: luceMockup,
+    imageAlt: 'Immigration Enforcement Reporter mapping tool shown on a desktop monitor',
+    // Single clip -- the crossfade loop just replays it seamlessly between
+    // the two buffered <video> slots (see WorkCard's advance()/preloadNext).
+    previewVideos: ['/videos/luce-demo.mp4'],
   },
   {
     title: 'BostonHacks 2025: Brand Direction',
@@ -64,8 +64,8 @@ function CaseStudies() {
         <div className={styles.grid}>
           {PROJECTS.map((project, index) =>
             project ? (
-              // LUCE is the first real card and sits in the grid's top
-              // row — the only one worth prioritizing over the rest of the page.
+              // Whichever project sits first in the grid's top row is the
+              // only one worth prioritizing over the rest of the page.
               <WorkCard key={project.title} project={project} priority={index === 0} />
             ) : (
               <div key={`placeholder-${index}`} className={styles.placeholder} aria-hidden="true" />

@@ -36,14 +36,14 @@ function scrollToSection(id) {
 
 // Explicit per-page "Next Up" order (as hrefs into PROJECTS), keyed by the
 // current page's own href — not derivable from PROJECTS' own order (that
-// only worked while every page's other two happened to land in PROJECTS'
-// order; the Homeward page's now wants BHacks before LUCE, which is the
-// reverse of PROJECTS' own LUCE-then-BHacks order), so this is hand-set per
-// page rather than computed generically.
+// only works while a page's other two happen to land in PROJECTS' order;
+// the Enforcement Reporter page wants BHacks before Homeward, which is the
+// reverse of PROJECTS' own Homeward-then-BHacks order), so this is hand-set
+// per page rather than computed generically.
 const NEXT_UP_ORDER = {
-  '/work/immigrationenforcementreporter': ['/work/homeward', '/work/bostonhacks'],
-  '/work/homeward': ['/work/bostonhacks', '/work/immigrationenforcementreporter'],
-  '/work/bostonhacks': ['/work/immigrationenforcementreporter', '/work/homeward'],
+  '/work/homeward': ['/work/immigrationenforcementreporter', '/work/bostonhacks'],
+  '/work/immigrationenforcementreporter': ['/work/bostonhacks', '/work/homeward'],
+  '/work/bostonhacks': ['/work/homeward', '/work/immigrationenforcementreporter'],
 }
 
 // Content is passed in per-project (see pages/HomewardCaseStudy.jsx) so the
