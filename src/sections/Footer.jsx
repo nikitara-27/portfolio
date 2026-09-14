@@ -18,6 +18,7 @@ gsap.registerPlugin(ScrollTrigger)
 const EMAIL = 'nikitaradash@gmail.com'
 const LINKEDIN_URL = 'https://www.linkedin.com/in/nikitaradash/'
 const INSTAGRAM_URL = 'https://www.instagram.com/niikiai/'
+const X_URL = 'https://x.com/niikiai'
 
 // Idle-cycle sleep frames, in order. The "z" rises a little further in each
 // successive frame (see cat-sleep-1/2/3.svg), so cycling through them reads
@@ -163,6 +164,9 @@ function Footer() {
                   </a>
                   <a href={INSTAGRAM_URL} target="_blank" rel="noreferrer" className={styles.link}>
                     Instagram
+                  </a>
+                  <a href={X_URL} target="_blank" rel="noreferrer" className={styles.link}>
+                    X
                   </a>
                 </nav>
               </div>
