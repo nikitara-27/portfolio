@@ -24,10 +24,10 @@
   gap: 0.75rem;
 }
 
-/* Same hover box as .link below (padding/margin/border-radius/background
-   are duplicated rather than shared via a second className, since the two
-   also need their own distinct flex/gap layout) — a highlight on hover
-   signals this acts as a nav link too, not just static text. */
+/* Padding/negative-margin pairing (matching .link below) just widens the
+   click target around the wordmark without shifting surrounding layout —
+   no background here, since hovering only recolors .wordmark itself (see
+   .homeButton:hover .wordmark below), not a pill like Work/Play/About. */
 .homeButton {
   display: flex;
   align-items: center;
@@ -38,8 +38,6 @@
   padding: 0.25rem 0.6rem;
   margin: -0.25rem -0.6rem;
   border-radius: 999px;
-  background: transparent;
-  transition: background-color 0.2s ease;
 }
 
 .iconButton {
@@ -68,14 +66,20 @@
   height: 15px;
 }
 
-/* --color-accent-green (#425c2f — the same token WorkCard's .tag pills use)
-   against the bar's white glass background. */
+/* Black by default; .homeButton:hover below recolors it to
+   --color-accent-green (#425c2f — the same token WorkCard's .tag pills
+   use), the only cue that it's clickable (no pill, unlike Work/Play/About). */
 .wordmark {
   font-family: var(--font-family);
   font-weight: var(--font-weight-semibold);
   font-size: var(--font-size-h4);
-  color: var(--color-accent-green);
+  color: var(--color-text);
   white-space: nowrap;
+  transition: color 0.18s ease;
+}
+
+.homeButton:hover .wordmark {
+  color: var(--color-accent-green);
 }
 
 .links {
@@ -88,22 +92,24 @@
   font-family: var(--font-family);
   font-weight: var(--font-weight-semibold);
   font-size: var(--font-size-h4);
-  color: var(--color-accent-green);
+  color: var(--color-text);
   text-decoration: none;
   padding: 0.25rem 0.6rem;
   margin: -0.25rem -0.6rem;
   border-radius: 999px;
   background: transparent;
-  transition: background-color 0.2s ease;
+  transition:
+    color 0.18s ease,
+    background-color 0.18s ease;
 }
 
-/* A soft green tint (--color-accent-green-rgb, the same token the icon
-   buttons' own hover leans on) — .homeButton gets the identical treatment
-   so "Niki Taradash" reads as clickable the same way Work/Play/About do. */
+/* Active (the current page's own link) gets the identical treatment as
+   hover, rather than just the pill with no color change — the two read as
+   the same "this is where you are/could go" cue. */
 .link:hover,
-.link.active,
-.homeButton:hover {
-  background: rgba(var(--color-accent-green-rgb), 0.12);
+.link.active {
+  color: var(--color-accent-green);
+  background: #ded9d1;
 }
 
 /* Mobile-only wordmark — centered in the bar independent of the
@@ -192,9 +198,10 @@
     display: block;
   }
 
-  /* .wordmark's shared rule is green for the desktop/tablet bar — this bar
-     has always been light/white too, but keeps the original dark text
-     instead, unrelated to that choice. */
+  /* Redundant with .wordmark's own default color now, but kept explicit —
+     mobile's wordmark never hovers (there's no .homeButton:hover to recolor
+     it), so it should never pick up desktop/tablet's hover-green regardless
+     of how the shared rule's default happens to be defined. */
   .mobileWordmark .wordmark {
     color: var(--color-text);
   }
