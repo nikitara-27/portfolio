@@ -231,7 +231,7 @@
 
   /* Full-screen overlay instead of a dropdown — position: fixed + inset: 0
      covers the header too. z-index: 9 sits below .hamburger's 11, so the
-     X stays visible and clickable on top of it. Light-opacity green glass
+     X stays visible and clickable on top of it. Light-opacity tan glass
      — .mobileLink/.mobileLinkActive's dark text needs to stay readable
      over it, not stand out against a solid fill. */
   .mobileMenu {
@@ -243,7 +243,7 @@
     inset: 0;
     z-index: 9;
     gap: 1rem;
-    background: rgba(var(--color-accent-green-rgb), 0.15);
+    background: rgba(138, 128, 110, 0.15);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     opacity: 0;
