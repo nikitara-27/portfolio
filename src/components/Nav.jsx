@@ -8,6 +8,9 @@ import styles from './Nav.module.css'
 
 const EMAIL = 'nikitaradash@gmail.com'
 const LINKEDIN_URL = 'https://www.linkedin.com/in/nikitaradash/'
+// Served as-is from /public (not imported from src/assets) so it keeps a
+// stable, unhashed URL — same file About.jsx's own Resume button links to.
+const RESUME_PDF_URL = '/niki-taradash-resume.pdf'
 
 function Nav({ onHomeClick }) {
   const { pathname } = useLocation()
@@ -95,6 +98,12 @@ function Nav({ onHomeClick }) {
         <Link to="/about" className={pathname === '/about' ? `${styles.link} ${styles.active}` : styles.link}>
           About
         </Link>
+        {/* download (not a route, so no .active state to track) triggers an
+            immediate file save instead of navigating — no target="_blank"
+            needed, since download already keeps the current page in place. */}
+        <a href={RESUME_PDF_URL} download="Niki-Resume.pdf" className={styles.link}>
+          Resume
+        </a>
       </div>
 
       {/* Mobile-only wordmark, left-aligned — see .mobileWordmark. */}
@@ -141,6 +150,9 @@ function Nav({ onHomeClick }) {
         >
           About
         </Link>
+        <a href={RESUME_PDF_URL} download="Niki-Resume.pdf" className={styles.mobileLink} onClick={closeMenu}>
+          Resume
+        </a>
 
         {/* Email/LinkedIn moved here from the header bar itself — mobile
             keeps only the wordmark and hamburger in the bar proper. */}
