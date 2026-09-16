@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { Draggable } from 'gsap/Draggable'
+import { HOVER_CAPABLE_QUERY } from '../utils/mediaQueries'
 import styles from './DraggableSticker.module.css'
 
 gsap.registerPlugin(Draggable)
@@ -175,7 +176,7 @@ function DraggableSticker({
 
     // Only relevant when inputAware — non-inputAware always drags,
     // regardless of input (About's touch-drag support, unchanged).
-    const mm = inputAware ? window.matchMedia('(hover: hover) and (pointer: fine)') : null
+    const mm = inputAware ? window.matchMedia(HOVER_CAPABLE_QUERY) : null
     let draggable = null
 
     const createDraggable = () => {
@@ -281,7 +282,7 @@ function DraggableSticker({
     // needs this, not just first-visit ones.
     positionBubble()
     if (!showDragHint || isDraggingRef.current) return
-    if (inputAware && !window.matchMedia('(hover: hover) and (pointer: fine)').matches) return
+    if (inputAware && !window.matchMedia(HOVER_CAPABLE_QUERY).matches) return
     gsap.killTweensOf(imgRef.current)
     gsap.to(imgRef.current, {
       y: -8,
@@ -294,7 +295,7 @@ function DraggableSticker({
 
   const handleHoverLeave = () => {
     if (!showDragHint || isDraggingRef.current) return
-    if (inputAware && !window.matchMedia('(hover: hover) and (pointer: fine)').matches) return
+    if (inputAware && !window.matchMedia(HOVER_CAPABLE_QUERY).matches) return
     gsap.killTweensOf(imgRef.current)
     gsap.to(imgRef.current, {
       y: 0,
@@ -317,7 +318,7 @@ function DraggableSticker({
     const root = rootRef.current
     if (!root) return undefined
 
-    const mm = window.matchMedia('(hover: hover) and (pointer: fine)')
+    const mm = window.matchMedia(HOVER_CAPABLE_QUERY)
     const closeBubble = () => root.classList.remove(styles.bubbleOpen)
 
     const onRootClick = () => {

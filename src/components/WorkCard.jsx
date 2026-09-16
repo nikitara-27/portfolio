@@ -1,5 +1,6 @@
 import { useLayoutEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
+import { HOVER_CAPABLE_QUERY } from '../utils/mediaQueries'
 import styles from './WorkCard.module.css'
 
 // Gates the video-preview swap only — border/shadow/scale now applies at
@@ -136,7 +137,7 @@ function WorkCard({ project, priority = false }) {
     const card = cardRef.current
     if (!card) return undefined
 
-    const mm = window.matchMedia('(hover: hover) and (pointer: fine)')
+    const mm = window.matchMedia(HOVER_CAPABLE_QUERY)
     let isTouchOnly = !mm.matches
 
     const addPressed = () => card.classList.add(styles.cardPressed)

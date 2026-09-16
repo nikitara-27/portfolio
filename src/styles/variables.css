@@ -3,18 +3,14 @@
   --color-bg: #ffffff;
   --color-text: #000000;
   --color-muted: #8a806e;
-  --color-divider: #ded9d1;
-  /* Same color as --color-divider, as separate r/g/b components — needed
+  /* Same color as --color-muted, as separate r/g/b components — needed
      wherever it's used at a fractional alpha (rgba()/color-mix() can't take
-     a hex custom property and vary its opacity), e.g. Nav's active-link and
-     mobile-menu backgrounds. */
-  --color-divider-rgb: 222, 217, 209;
+     a hex custom property and vary its opacity), e.g. Nav's mobile-menu
+     background. */
+  --color-muted-rgb: 138, 128, 110;
+  --color-divider: #ded9d1;
   --color-accent-green: #425c2f;
   --color-accent-green-hover: #607d4b;
-  /* Same color as --color-accent-green, as separate r/g/b components — for
-     Nav's glass-pill background, which needs a fractional alpha over the
-     page content scrolling behind it. */
-  --color-accent-green-rgb: 66, 92, 47;
 
   /* Type family */
   --font-family: 'Montserrat', sans-serif;

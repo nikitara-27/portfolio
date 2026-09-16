@@ -109,7 +109,7 @@
 .link:hover,
 .link.active {
   color: var(--color-accent-green);
-  background: #ded9d1;
+  background: var(--color-divider);
 }
 
 /* Mobile-only wordmark — centered in the bar independent of the
@@ -243,7 +243,7 @@
     inset: 0;
     z-index: 9;
     gap: 1rem;
-    background: rgba(138, 128, 110, 0.15);
+    background: rgba(var(--color-muted-rgb), 0.15);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     opacity: 0;

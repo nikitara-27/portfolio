@@ -7,7 +7,9 @@ export function rand(seed) {
 }
 
 // A clip-path polygon for an n-pointed star, sized to fill its own box.
-export function starPolygon(points, innerRatio) {
+// Not exported — only STAR5_CLIP/STAR4_CLIP below (the two shapes actually
+// used) are consumed elsewhere.
+function starPolygon(points, innerRatio) {
   const cx = 50
   const cy = 50
   const outerR = 50
