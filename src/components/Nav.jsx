@@ -98,10 +98,9 @@ function Nav({ onHomeClick }) {
         <Link to="/about" className={pathname === '/about' ? `${styles.link} ${styles.active}` : styles.link}>
           About
         </Link>
-        {/* download (not a route, so no .active state to track) triggers an
-            immediate file save instead of navigating — no target="_blank"
-            needed, since download already keeps the current page in place. */}
-        <a href={RESUME_PDF_URL} download="Niki-Resume.pdf" className={styles.link}>
+        {/* target="_blank" (not a route, so no .active state to track) —
+            same open-in-new-tab behavior as About's own ResumeButton. */}
+        <a href={RESUME_PDF_URL} target="_blank" rel="noopener noreferrer" className={styles.link}>
           Resume
         </a>
       </div>
@@ -150,7 +149,13 @@ function Nav({ onHomeClick }) {
         >
           About
         </Link>
-        <a href={RESUME_PDF_URL} download="Niki-Resume.pdf" className={styles.mobileLink} onClick={closeMenu}>
+        <a
+          href={RESUME_PDF_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={styles.mobileLink}
+          onClick={closeMenu}
+        >
           Resume
         </a>
 
