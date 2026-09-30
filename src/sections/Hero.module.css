@@ -1,23 +1,6 @@
 .hero {
   position: relative;
-  height: 100vh;
-  background: var(--color-bg);
-}
-
-.frame {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  border-radius: 0px;
-  /* Nothing inside is interactive (just the headline/subtext), but this
-     box still spans the entire hero edge-to-edge and, with no z-index,
-     paints above the sticker icons now that they're siblings rendered
-     before it (see Hero.jsx) — without this, it silently intercepts
-     hover/click/drag everywhere except where .content's own text sits. */
-  pointer-events: none;
+  padding: 10rem var(--page-gutter) 8.5rem;
 }
 
 .content {
@@ -26,8 +9,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.25rem;
-  padding: 0 1.5rem;
+  gap: 1.75rem;
   text-align: center;
 }
 
@@ -36,46 +18,17 @@
   letter-spacing: -0.02em;
 }
 
-@media (max-width: 720px) {
-  .headline {
-    font-size: var(--font-size-h2);
-  }
-}
-
 .body {
-  max-width: 46ch;
-  line-height: 1.45;
-  color: var(--color-accent-green);
+  font-size: var(--font-size-body-lg);
+  line-height: 1.3;
 }
 
-.scrollHint {
-  position: absolute;
-  z-index: 1;
-  left: 50%;
-  bottom: 2.5rem;
-  translate: -50% 0;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 0.3rem;
-  color: var(--color-text);
-  font-family: var(--font-family-body);
-  font-size: var(--font-size-body);
-  animation: scroll-hint-bounce 1.8s ease-in-out infinite;
-}
-
-.scrollHintArrow {
-  width: 16px;
-  height: 16px;
-  flex-shrink: 0;
-}
-
-@keyframes scroll-hint-bounce {
-  0%,
-  100% {
-    transform: translateY(0);
+@media (max-width: 720px) {
+  .hero {
+    padding: 7.5rem var(--page-gutter) 4.5rem;
   }
-  50% {
-    transform: translateY(8px);
+
+  .content {
+    gap: 1.25rem;
   }
 }

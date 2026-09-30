@@ -1,38 +1,50 @@
+/* Starts with the full-width rule under the hero, then the card grid. */
 .section {
-  position: relative;
-  background: var(--color-bg);
-  padding: 120px 2rem;
-}
-
-.inner {
-  max-width: 1240px;
-  margin: 0 auto;
-}
-
-.heading {
-  margin-bottom: 3rem;
+  margin: 0 var(--page-gutter);
+  padding: 3rem 0 9rem;
+  border-top: 1px solid var(--color-rule);
 }
 
 .grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 3rem 2.75rem;
+  gap: 3rem;
+}
+
+/* Gray placeholder until a thumbnail is set (see PROJECTS' `thumbnail`) —
+   any image/video dropped in fills and crops to the same box. */
+.card {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 7 / 5;
+  border-radius: 12px;
+  background: var(--color-placeholder);
+  transition: opacity 0.2s ease;
+}
+
+.card:hover {
+  opacity: 0.85;
+}
+
+.card:focus-visible {
+  outline: 2px solid var(--color-text);
+  outline-offset: 3px;
+}
+
+.media {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 @media (max-width: 720px) {
+  .section {
+    padding: 1.5rem 0 4.5rem;
+  }
+
   .grid {
     grid-template-columns: 1fr;
-    gap: 1.25rem;
+    gap: 1.5rem;
   }
-}
-
-.placeholder {
-  background: var(--color-divider);
-  border-radius: 12px;
-  /* .card itself has no single aspect-ratio anymore (image + a naturally-
-     sized text block below it, see WorkCard.module.css) — matches just
-     .image's own ratio instead, the closest reasonable stand-in. Currently
-     unused (PROJECTS has no null entries to fill this), kept for whenever
-     a future odd project count needs a filler in the grid's last row. */
-  aspect-ratio: 3 / 2;
 }

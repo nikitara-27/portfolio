@@ -1,13 +1,19 @@
 import homewardMockup from '../assets/images/homeward-mockup.jpg'
 import bhacksMockup from '../assets/images/bhacks-mockup.jpg'
 import luceMockup from '../assets/images/luce-mockup.jpg'
-import WorkCard from '../components/WorkCard'
+import { Link } from 'react-router-dom'
 import styles from './CaseStudies.module.css'
 
 // Exported so CaseStudyLayout can reuse the same title/blurb/tags/image
 // data (and the WorkCard component itself) for a case study page's own
 // "Next Up" section, instead of that content being re-typed per page and
 // drifting out of sync with these cards.
+//
+// `thumbnail` is what the landing-page grid shows in each card. Leave it
+// null for the gray placeholder, or set it to an image or video:
+//   thumbnail: { type: 'image', src: homewardThumb, alt: '...' }
+//   thumbnail: { type: 'video', src: '/videos/homeward-intro-animation.mov' }
+// (import images from src/assets; reference videos by their /public path).
 export const PROJECTS = [
   {
     title: 'Homeward Scoring Platform',
@@ -16,6 +22,7 @@ export const PROJECTS = [
     compactHiddenTags: ['Urban Planning'],
     team: true,
     href: '/work/homeward',
+    thumbnail: null,
     image: homewardMockup,
     imageAlt: "Homeward's scoring platform shown on a tablet",
     // Same clips/order as the case study's own Final Product section —
@@ -34,6 +41,7 @@ export const PROJECTS = [
     compactHiddenTags: ['Competitive Analysis'],
     team: true,
     href: '/work/immigrationenforcementreporter',
+    thumbnail: null,
     image: luceMockup,
     imageAlt: 'Immigration Enforcement Reporter mapping tool shown on a desktop monitor',
     // Single clip -- the crossfade loop just replays it seamlessly between
@@ -47,6 +55,7 @@ export const PROJECTS = [
     compactHiddenTags: ['UI Design'],
     team: true,
     href: '/work/bostonhacks',
+    thumbnail: null,
     image: bhacksMockup,
     imageAlt: 'BostonHacks 2025 brand direction shown on a laptop',
     // Same two clips (and order) as the case study's own Final Product
@@ -58,23 +67,25 @@ export const PROJECTS = [
 function CaseStudies() {
   return (
     <section id="case-studies" className={styles.section}>
-      <div className={styles.inner}>
-        <h1 className={styles.heading}>Case Studies</h1>
-
-        <div className={styles.grid}>
-          {PROJECTS.map((project, index) =>
-            project ? (
-              // Whichever project sits first in the grid's top row is the
-              // only one worth prioritizing over the rest of the page.
-              <WorkCard key={project.title} project={project} priority={index === 0} />
-            ) : (
-              <div key={`placeholder-${index}`} className={styles.placeholder} aria-hidden="true" />
-            ),
-          )}
-        </div>
+      <div className={styles.grid}>
+        {PROJECTS.map((project) => (
+          <Link key={project.href} to={project.href} className={styles.card} aria-label={project.title}>
+            <CardThumbnail thumbnail={project.thumbnail} />
+          </Link>
+        ))}
       </div>
     </section>
   )
+}
+
+function CardThumbnail({ thumbnail }) {
+  if (thumbnail?.type === 'image') {
+    return <img src={thumbnail.src} alt={thumbnail.alt ?? ''} className={styles.media} loading="lazy" decoding="async" />
+  }
+  if (thumbnail?.type === 'video') {
+    return <video src={thumbnail.src} className={styles.media} autoPlay muted loop playsInline aria-hidden="true" />
+  }
+  return null
 }
 
 export default CaseStudies

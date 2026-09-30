@@ -65,27 +65,15 @@ function Nav({ onHomeClick }) {
 
   return (
     <nav className={navClassName}>
-      {/* Desktop/tablet — a standard full-width sticky bar (not the earlier
-          expandable pill): wordmark + icons on the left, nav links on the
-          right, always fully visible. Hidden entirely on mobile; see
+      {/* Desktop/tablet — a standard full-width sticky bar: wordmark on the
+          left, nav links on the right. Hidden entirely on mobile; see
           .mobileWordmark/.hamburger/.mobileMenu below for that
-          breakpoint's own bar. */}
+          breakpoint's own bar. Email/LinkedIn only appear in the mobile
+          menu now. */}
       <div className={styles.left}>
         <Link to="/" className={styles.homeButton} aria-label="Back to home" onClick={handleHomeClick}>
-          <h4 className={styles.wordmark}>Niki Taradash</h4>
+          <span className={styles.wordmark}>Niki Taradash</span>
         </Link>
-        <a href={`mailto:${EMAIL}`} className={styles.iconButton} aria-label="Email Niki">
-          <FiMail />
-        </a>
-        <a
-          href={LINKEDIN_URL}
-          target="_blank"
-          rel="noreferrer"
-          className={styles.iconButton}
-          aria-label="Niki's LinkedIn profile"
-        >
-          <FaLinkedin />
-        </a>
       </div>
 
       <div className={styles.links}>
@@ -107,7 +95,7 @@ function Nav({ onHomeClick }) {
 
       {/* Mobile-only wordmark, left-aligned — see .mobileWordmark. */}
       <Link to="/" className={styles.mobileWordmark} aria-label="Back to home" onClick={handleHomeClick}>
-        <h4 className={styles.wordmark}>Niki Taradash</h4>
+        <span className={styles.wordmark}>Niki Taradash</span>
       </Link>
 
       {/* Mobile-only hamburger toggle — hidden entirely above the mobile

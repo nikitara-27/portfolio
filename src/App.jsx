@@ -4,6 +4,7 @@ import Nav from './components/Nav'
 import ScrollToTop from './components/ScrollToTop'
 import SmoothScroll from './components/SmoothScroll'
 import CursorEffects from './components/CursorEffects'
+import { SHOW_CURSOR_TRAIL } from './config/features'
 import Landing from './sections/Landing'
 import About from './sections/About'
 import Play from './sections/Play'
@@ -17,7 +18,7 @@ function App() {
   return (
     <>
       <SmoothScroll />
-      <CursorEffects />
+      {SHOW_CURSOR_TRAIL && <CursorEffects />}
       <ScrollToTop />
       <Nav onHomeClick={() => setHomeKey((key) => key + 1)} />
       <Routes>

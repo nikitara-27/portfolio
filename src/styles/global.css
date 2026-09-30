@@ -53,7 +53,8 @@ html.cursor-hidden * {
 h1,
 h2,
 h3,
-h4 {
+h4,
+h5 {
   margin: 0;
   font-family: var(--font-family);
   font-weight: var(--font-weight-normal);
@@ -69,17 +70,39 @@ h2 {
 
 h3 {
   font-size: var(--font-size-h3);
-  font-weight: var(--font-weight-semibold);
 }
 
 h4 {
   font-size: var(--font-size-h4);
-  font-weight: var(--font-weight-semibold);
+}
+
+h5 {
+  font-size: var(--font-size-h5);
 }
 
 p {
   margin: 0;
   font-size: var(--font-size-body);
+}
+
+.body-lg {
+  font-size: var(--font-size-body-lg);
+}
+
+.body-sm {
+  font-size: var(--font-size-body-sm);
+}
+
+/* Tchig Mono accent face — .accent-1 is its display size; the plain
+   .accent class keeps the surrounding font size. */
+.accent,
+.accent-1 {
+  font-family: var(--font-family-accent);
+  font-weight: var(--font-weight-normal);
+}
+
+.accent-1 {
+  font-size: var(--font-size-accent-1);
 }
 
 .body-m {
