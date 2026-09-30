@@ -1,0 +1,155 @@
+/* Aspect ratio of the full composition (all four layers' combined bounds).
+   Every layer below is positioned in % of this box, so they scale together
+   and can't drift apart. No overflow: hidden — the lifted clover/polaroid
+   need to be able to rise past the top edge. */
+.envelope {
+  position: relative;
+  aspect-ratio: 674.9 / 706.6;
+}
+
+.layer {
+  position: absolute;
+  display: block;
+  height: auto;
+  max-width: none;
+  transform: translateY(var(--lift, 0)) rotate(var(--rotate, 0deg));
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.back {
+  left: 0.1%;
+  top: 0;
+  width: 99.85%;
+}
+
+.clover {
+  left: 4.78%;
+  top: 9.96%;
+  width: 71.56%;
+}
+
+.polaroid {
+  left: 48.14%;
+  top: 37.95%;
+  width: 32.68%;
+  --rotate: -12.5deg;
+}
+
+.front {
+  left: 0.05%;
+  top: 43.78%;
+  width: 99.9%;
+  pointer-events: none;
+}
+
+/* The clover and polaroid are buttons (click to enlarge). */
+.item {
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: zoom-in;
+}
+
+.item img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.item:focus-visible {
+  outline: 2px solid var(--color-accent-blue);
+  outline-offset: 4px;
+}
+
+/* Desktop hover: the clover, then the polaroid, slide up out of the pocket.
+   Mouse/trackpad only, above the mobile breakpoint, and never with reduced
+   motion — everywhere else the layers just stay put. */
+@media (hover: hover) and (pointer: fine) and (min-width: 721px) and (prefers-reduced-motion: no-preference) {
+  .clover,
+  .polaroid {
+    transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform;
+  }
+
+  .polaroid {
+    transition-delay: 0.06s;
+  }
+
+  .envelope:hover .clover {
+    --lift: -16px;
+  }
+
+  .envelope:hover .polaroid {
+    --lift: -20px;
+  }
+}
+
+/* Enlarged view: covers the page (above the nav), click anywhere or press
+   Esc to close. */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 4rem var(--page-gutter);
+  background: color-mix(in srgb, var(--color-bg) 85%, transparent);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  cursor: zoom-out;
+  animation: overlay-in 0.25s ease-out;
+}
+
+.enlarged {
+  max-width: 100%;
+  max-height: 100%;
+  animation: enlarge-in 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cloverEnlarged {
+  width: min(640px, 80vh);
+}
+
+.polaroidEnlarged {
+  height: min(720px, 85vh);
+  width: auto;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
+}
+
+.close {
+  position: absolute;
+  top: 1.5rem;
+  right: var(--page-gutter);
+  padding: 0.5rem 0;
+  border: none;
+  background: none;
+  color: var(--color-text);
+  font: inherit;
+  cursor: pointer;
+}
+
+.close:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+@keyframes overlay-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes enlarge-in {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay,
+  .enlarged {
+    animation: none;
+  }
+}
