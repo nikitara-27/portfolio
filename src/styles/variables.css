@@ -14,8 +14,6 @@
   /* Sunlit footer — blue background with navy text. */
   --color-footer-bg: var(--color-accent-blue);
   --color-footer-ink: #1d2951;
-  /* Cursor sparkles (CursorEffects). */
-  --color-cursor-star: #000000;
   --color-accent-green: #425c2f;
   --color-accent-green-hover: #607d4b;
 

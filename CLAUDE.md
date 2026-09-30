@@ -32,7 +32,7 @@ Personal portfolio site for Niki Taradash (graphic/UX design student at BU).
 - src/sections/: Landing, Hero, CaseStudies (grid + PROJECTS data), Experience, About, Play, Footer
 - src/pages/: one file per case study (HomewardCaseStudy, BostonHacksCaseStudy, ImmigrationEnforcementReporterCaseStudy)
 - src/components/: Nav, WorkCard (hover-preview video), CaseStudyLayout, CaseStudyContent,
-  CursorEffects (dot cursor + optional sparkles), DraggableSticker, TypewriterText,
+  CursorEffects (dot cursor), DraggableSticker, TypewriterText,
   PlayCornerCat, BackgroundAnimation (currently unused), SmoothScroll, ScrollToTop
 - src/config/features.js: on/off switches for hidden features (see below)
 - src/lib/sunlit-footer.js: third-party `<sunlit-footer>` web component (WebGL
@@ -91,14 +91,11 @@ Personal portfolio site for Niki Taradash (graphic/UX design student at BU).
 - No "Back to top"; links have no arrow icons
 
 ## Cursor (src/components/CursorEffects.jsx)
-- Custom 10px dot cursor in accent blue; hidden on touch (`pointer: fine` only)
-- Optional black thin-line sparkle bursts (tapered crosses, cross+ring, rings,
-  dots), currently switched off; color is `--color-cursor-star`, and density/size/fade
-  settings are constants at the top of the file
+- Custom 10px dot cursor in accent blue; hidden on touch (`pointer: fine` only).
+  No trail or sparkles (removed for good).
 
 ## Feature switches (src/config/features.js)
-- SHOW_CURSOR_TRAIL: dot cursor (on)
-- SHOW_CURSOR_SPARKLES: sparkle bursts (off)
+- SHOW_CUSTOM_CURSOR: dot cursor (on)
 - SHOW_LANDING_STICKERS: draggable hero stickers (off; positions need re-tuning
   if they come back)
 

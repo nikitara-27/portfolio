@@ -10,26 +10,3 @@
   z-index: 9999;
   will-change: transform;
 }
-
-/* Full-viewport layer the sparkles are appended to. Never takes clicks. */
-.layer {
-  position: fixed;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-  z-index: 9998;
-  color: var(--color-cursor-star);
-}
-
-.sparkle {
-  position: absolute;
-  top: 0;
-  left: 0;
-  pointer-events: none;
-  will-change: transform, opacity;
-}
-
-.sparkle svg {
-  display: block;
-  overflow: visible;
-}

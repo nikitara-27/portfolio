@@ -6,7 +6,4 @@
 export const SHOW_LANDING_STICKERS = false
 
 // Custom dot cursor (CursorEffects), site-wide.
-export const SHOW_CURSOR_TRAIL = true
-
-// Sparkle bursts around the dot cursor as it moves.
-export const SHOW_CURSOR_SPARKLES = false
+export const SHOW_CUSTOM_CURSOR = true
