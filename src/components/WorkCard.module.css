@@ -142,6 +142,10 @@
 .title {
   margin: 0 0 0.35rem;
   color: var(--color-text);
+  /* Pinned near the card's original 18px semibold — as a plain h3 it
+     would pick up the redesign's 40px H3. */
+  font-size: var(--font-size-h5);
+  font-weight: var(--font-weight-semibold);
 }
 
 .description {
