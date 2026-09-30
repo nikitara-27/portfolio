@@ -157,7 +157,7 @@ export function TagRow({ tags }) {
   return (
     <div className={styles.tagRow}>
       {tags.map((tag) => (
-        <span key={tag} className={`${styles.tag} body-m`}>
+        <span key={tag} className={`${styles.tag} body-sm`}>
           {tag}
         </span>
       ))}

@@ -52,7 +52,7 @@
 .sideNavLabel {
   font-family: var(--font-family-body);
   font-weight: var(--font-weight-normal);
-  font-size: var(--font-size-body-s);
+  font-size: var(--font-size-body-sm);
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--color-muted);
@@ -94,7 +94,7 @@
   display: inline-block;
   font-family: var(--font-family-body);
   font-weight: var(--font-weight-normal);
-  font-size: var(--font-size-body-m);
+  font-size: var(--font-size-body-sm);
   color: var(--color-muted);
   text-decoration: none;
   transition: color 0.2s ease;
@@ -123,7 +123,7 @@
      column below it — keeping each manual <br> line (see
      HomewardCaseStudy.jsx) from soft-wrapping further and stranding a
      single word on its own line, at any width, not just a few tested ones. */
-  font-size: clamp(0.75rem, 5vw, var(--font-size-h1));
+  font-size: clamp(var(--font-size-body-sm), 5vw, var(--font-size-h1));
   /* Shrink-wraps to its longest line (rather than stretching the full
      content column) so its rendered width can be measured and mirrored
      onto the content column itself (see CaseStudyLayout.jsx), aligning
@@ -144,7 +144,7 @@
 .metaLabel {
   font-family: var(--font-family-body);
   font-weight: var(--font-weight-normal);
-  font-size: var(--font-size-body-m);
+  font-size: var(--font-size-body-sm);
   color: var(--color-muted);
   margin: 0 0 0.3rem;
 }
@@ -152,7 +152,7 @@
 .metaValue {
   font-family: var(--font-family-body);
   font-weight: var(--font-weight-normal);
-  font-size: var(--font-size-body-m);
+  font-size: var(--font-size-body-sm);
   color: var(--color-muted);
   margin: 0;
 }
@@ -167,7 +167,7 @@
   gap: 0.25rem;
   font-family: var(--font-family-body);
   font-weight: var(--font-weight-normal);
-  font-size: var(--font-size-body-m);
+  font-size: var(--font-size-body-sm);
   color: var(--color-muted);
   text-decoration: none;
   background-image: linear-gradient(currentColor, currentColor);

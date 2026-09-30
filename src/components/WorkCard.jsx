@@ -216,7 +216,7 @@ function WorkCard({ project, priority = false }) {
 
         <h3 className={styles.title}>{project.title}</h3>
 
-        <p className={`${styles.description} body-s`}>
+        <p className={`${styles.description} body-sm`}>
           {project.descriptionLines[0]}
           <br />
           {project.descriptionLines[1]}

@@ -52,12 +52,14 @@ Personal portfolio site for Niki Taradash (graphic/UX design student at BU).
 - Fonts: Manrope Medium (500) for headings and body, from Google Fonts; Tchig Mono
   (`tchig-mono`, `--font-family-accent`) as the accent face, from Adobe Fonts kit
   xqk7jjg (use.typekit.net/xqk7jjg.css). Both are linked in index.html.
-- Type scale (desktop / mobile ≤720px):
-  - H1 64/48, H2 56/40, H3 40/32, H4 28/24, H5 22/20
-  - Body Large 20/18, Body Med 16/16, Body Small 14/14
-  - Accent 1 (Tchig Mono) 64/48
-  - Utility classes: .body-lg, .body-sm, .accent, .accent-1
-- Legacy sizes still used by About/Play/case-study pages: body-m 12px, body-s 10px, body-italic
+- Type scale (desktop / mobile ≤720px, px; line-height; letter-spacing), each level
+  a `--font-size-*` / `--line-height-*` / `--letter-spacing-*` token:
+  - H1 52/38, 1.1, -0.02em · H2 40/32, 1.15, -0.015em · H3 32/26, 1.2, -0.01em
+  - H4 24/21, 1.25, -0.005em · H5 20/18, 1.3
+  - Body Large 18/17 · Body Medium 16/15 · Body Small 14/13 (all 1.5)
+  - Accent 1 (Tchig Mono) 20/16, 1.4 · Accent 2 (Tchig Mono) 14/13, 1.4, 0.02em
+  - Utility classes: .body-lg, .body-sm, .accent-1, .accent-2, .body-italic (Body Large italic)
+  - No font sizes outside these tokens (the case study title is a clamp() between Body Small and H1)
 - Breakpoint: mobile is `max-width: 720px` (the only type-scale breakpoint); some
   layouts also stack at 1024px
 - Layout: `--page-gutter` 64px desktop / 20px mobile; frosted glass `--glass-bg`
@@ -69,7 +71,7 @@ Personal portfolio site for Niki Taradash (graphic/UX design student at BU).
    -webkit- prefix). "Niki Taradash" left; Work, Play, About, Resume right
    (Resume opens the PDF in a new tab). Mobile: hamburger → full-screen menu
    with the same glass, plus email/LinkedIn icons.
-2. Hero: "Niki Taradash" (H1), then two Tchig Mono lines at Body Large:
+2. Hero: "Niki Taradash" (H1), then two lines in Accent 1:
    "Design student @ Boston University" / "Currently product design intern @ Bendi Wellness"
 3. Divider rule, then the case study grid: 2 columns desktop / 1 mobile, using the
    original WorkCard (image, hover video, tags, title, description) until the cards
@@ -83,7 +85,7 @@ Personal portfolio site for Niki Taradash (graphic/UX design student at BU).
 ## Footer (src/sections/Footer.jsx)
 - `<sunlit-footer>` with animated dappled light (shadow-color #1975FF, light-color
   #FFFEC2), 300px tall (360px mobile)
-- Layout: "Let's Connect" (plain h2, Tchig Mono, Accent 1; H2 size on mobile) at
+- Layout: "Let's Connect" (plain h2, Tchig Mono at the H1 size) at
   lower left with the copyright under it; social links stacked on the right
   (LinkedIn, Email, Instagram, X; external ones open in a new tab); credit line
   "Made with lots of matcha, Figma, and Claude Code" under the links, sharing the

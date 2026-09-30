@@ -19,7 +19,7 @@ body {
   font-family: var(--font-family-body);
   font-weight: var(--font-weight-normal);
   font-size: var(--font-size-body);
-  line-height: 1.5;
+  line-height: var(--line-height-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -62,66 +62,75 @@ h5 {
 
 h1 {
   font-size: var(--font-size-h1);
+  line-height: var(--line-height-h1);
+  letter-spacing: var(--letter-spacing-h1);
 }
 
 h2 {
   font-size: var(--font-size-h2);
+  line-height: var(--line-height-h2);
+  letter-spacing: var(--letter-spacing-h2);
 }
 
 h3 {
   font-size: var(--font-size-h3);
+  line-height: var(--line-height-h3);
+  letter-spacing: var(--letter-spacing-h3);
 }
 
 h4 {
   font-size: var(--font-size-h4);
+  line-height: var(--line-height-h4);
+  letter-spacing: var(--letter-spacing-h4);
 }
 
 h5 {
   font-size: var(--font-size-h5);
+  line-height: var(--line-height-h5);
 }
 
 p {
   margin: 0;
   font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
 }
 
+/* Body sizes (Body Medium is the default for body and p). */
 .body-lg {
   font-size: var(--font-size-body-lg);
+  line-height: var(--line-height-body);
 }
 
 .body-sm {
   font-size: var(--font-size-body-sm);
+  line-height: var(--line-height-body);
 }
 
-/* Tchig Mono accent face — .accent-1 is its display size; the plain
-   .accent class keeps the surrounding font size. */
-.accent,
-.accent-1 {
+/* Tchig Mono accents. */
+.accent-1,
+.accent-2 {
   font-family: var(--font-family-accent);
   font-weight: var(--font-weight-normal);
 }
 
 .accent-1 {
   font-size: var(--font-size-accent-1);
+  line-height: var(--line-height-accent-1);
 }
 
-.body-m {
-  font-family: var(--font-family-body);
-  font-weight: var(--font-weight-normal);
-  font-size: var(--font-size-body-m);
+.accent-2 {
+  font-size: var(--font-size-accent-2);
+  line-height: var(--line-height-accent-2);
+  letter-spacing: var(--letter-spacing-accent-2);
 }
 
-.body-s {
-  font-family: var(--font-family-body);
-  font-weight: var(--font-weight-normal);
-  font-size: var(--font-size-body-s);
-}
-
+/* Pull quotes on the case study pages: Body Large, semibold italic. */
 .body-italic {
   font-family: var(--font-family-body);
   font-weight: var(--font-weight-semibold);
   font-style: italic;
-  font-size: var(--font-size-body-italic);
+  font-size: var(--font-size-body-lg);
+  line-height: var(--line-height-body);
 }
 
 img,

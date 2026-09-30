@@ -67,9 +67,9 @@ function Hero() {
       {SHOW_LANDING_STICKERS && <HeroStickers />}
 
       <div className={styles.content}>
-        <h1 className={styles.headline}>Niki Taradash</h1>
+        <h1>Niki Taradash</h1>
 
-        <p className={`${styles.body} accent`}>
+        <p className="accent-1">
           Design student @ Boston University
           <br />
           Currently product design intern @ Bendi Wellness

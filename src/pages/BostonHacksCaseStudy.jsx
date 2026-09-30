@@ -171,7 +171,7 @@ const SECTIONS = [
                     color: '#ffffff',
                     fontFamily: 'var(--font-family-body)',
                     fontWeight: 'var(--font-weight-semibold)',
-                    fontSize: 'var(--font-size-body-m)',
+                    fontSize: 'var(--font-size-body-sm)',
                     whiteSpace: 'nowrap',
                   }}
                 >

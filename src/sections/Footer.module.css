@@ -45,9 +45,9 @@
   grid-area: connect;
   align-self: end;
   font-family: var(--font-family-accent);
-  font-size: var(--font-size-accent-1);
-  line-height: 1;
-  letter-spacing: -0.02em;
+  font-size: var(--font-size-h1);
+  line-height: var(--line-height-h1);
+  letter-spacing: var(--letter-spacing-h1);
 }
 
 .socials {
@@ -66,7 +66,7 @@
 .credit {
   align-self: end;
   font-size: var(--font-size-body-sm);
-  line-height: 1.5;
+  line-height: var(--line-height-body);
   letter-spacing: 0.02em;
 }
 
@@ -97,11 +97,6 @@
       'copyright credit';
     column-gap: 1rem;
     row-gap: 1rem;
-  }
-
-  /* Accent 1 at 48px is too wide for "Let's Connect" on a phone. */
-  .connect {
-    font-size: var(--font-size-h2);
   }
 
   .socials {
