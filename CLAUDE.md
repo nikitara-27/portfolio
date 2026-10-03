@@ -32,7 +32,7 @@ Personal portfolio site for Niki Taradash (graphic/UX design student at BU).
 - src/sections/: Landing, Hero, CaseStudies (grid + PROJECTS data), Experience, About, Play, Footer
 - src/pages/: one file per case study (HomewardCaseStudy, BostonHacksCaseStudy, ImmigrationEnforcementReporterCaseStudy)
 - src/components/: Nav, WorkCard (hover-preview video), CaseStudyLayout, CaseStudyContent,
-  CursorEffects (dot cursor), DraggableSticker, TypewriterText,
+  CursorEffects (dot cursor), DraggableSticker, Envelope (About page),
   PlayCornerCat, BackgroundAnimation (currently unused), SmoothScroll, ScrollToTop
 - src/config/features.js: on/off switches for hidden features (see below)
 - src/lib/sunlit-footer.js: third-party `<sunlit-footer>` web component (WebGL
@@ -73,6 +73,9 @@ Personal portfolio site for Niki Taradash (graphic/UX design student at BU).
    with the same glass, plus email/LinkedIn icons.
 2. Hero: "Niki Taradash" (H1), then two lines in Accent 1:
    "Design student @ Boston University" / "Currently product design intern @ Bendi Wellness"
+   Scale-in reveal (Web Animations; constants at the top of Hero.jsx): each line fades in
+   from scale 1.18, 1800ms, 250ms stagger. Plays on every full page load, after fonts load
+   (1.5s cap); instant on in-site navigation back home, reduced motion, or a hidden tab.
 3. Divider rule, then the case study grid: 2 columns desktop / 1 mobile, using the
    original WorkCard (image, hover video, tags, title, description) until the cards
    are redesigned. Card titles are pinned to H5 semibold.

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import DraggableSticker, { STICKER_HINT_SEEN_KEY } from '../components/DraggableSticker'
 import matchaIcon from '../assets/icons/matcha-latte.svg'
 import mangoIcon from '../assets/icons/mango.svg'
@@ -6,6 +6,32 @@ import catIcon from '../assets/icons/cat-sit.svg'
 import cameraIcon from '../assets/icons/camera.svg'
 import { SHOW_LANDING_STICKERS } from '../config/features'
 import styles from './Hero.module.css'
+
+/* ---------- Scale-in reveal ---------- */
+const REVEAL_DURATION_MS = 1800 // per line
+const REVEAL_STAGGER_MS = 250 // each line starts this long after the previous one
+const REVEAL_START_SCALE = 1.18 // lines settle from this size down to 1
+const REVEAL_EASING = 'cubic-bezier(0.16, 1, 0.3, 1)'
+const FONT_WAIT_MAX_MS = 1500 // longest to wait for fonts before revealing anyway
+
+// The reveal plays on every full page load, but not when coming back to the
+// homepage within the site (route change or the nav logo remounting the
+// landing page) — module state resets only on a real load/refresh.
+let playedThisPageLoad = false
+
+const prefersReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+// Resolves once the hero's fonts (Manrope, Tchig Mono) are ready, so they
+// don't swap mid-animation — or after FONT_WAIT_MAX_MS regardless.
+function waitForHeroFonts() {
+  const fonts = document.fonts
+  if (!fonts) return Promise.resolve()
+  const root = getComputedStyle(document.documentElement)
+  const families = ['--font-family', '--font-family-accent'].map((v) => root.getPropertyValue(v).trim())
+  const loaded = Promise.all(families.map((family) => fonts.load(`500 1em ${family}`))).then(() => fonts.ready)
+  const timeout = new Promise((resolve) => window.setTimeout(resolve, FONT_WAIT_MAX_MS))
+  return Promise.race([loaded, timeout]).catch(() => {})
+}
 
 // Same drop-in-and-bounce entrance these icons had as plain HeroIllustrations
 // before they became draggable stickers (see DraggableSticker's bounceIn),
@@ -62,17 +88,83 @@ const ILLUSTRATIONS = [
 ]
 
 function Hero() {
+  const lineRefs = useRef([])
+  // Decided once per mount. Reading (not setting) the module flag here keeps
+  // it StrictMode-safe; the effect below marks it.
+  const [animate] = useState(
+    () => !playedThisPageLoad && !prefersReducedMotion() && document.visibilityState === 'visible',
+  )
+
+  // Each line fades in while settling from slightly larger to its normal
+  // size, staggered. Only transform/opacity animate, and the text is always
+  // rendered, so nothing shifts. Lines are hidden (before first paint) only
+  // while waiting for fonts; every exit path clears that, so the text can't
+  // be left invisible.
+  useLayoutEffect(() => {
+    playedThisPageLoad = true
+    if (!animate) return undefined
+    const lines = lineRefs.current.filter(Boolean)
+    let cancelled = false
+    lines.forEach((el) => {
+      el.style.opacity = '0'
+    })
+    const showNow = () => {
+      lines.forEach((el) => {
+        el.style.opacity = ''
+        el.getAnimations().forEach((a) => a.finish())
+      })
+    }
+
+    waitForHeroFonts().then(() => {
+      if (cancelled) return
+      lines.forEach((el, i) => {
+        el.style.opacity = ''
+        el.animate(
+          [
+            { opacity: 0, transform: `scale(${REVEAL_START_SCALE})` },
+            { opacity: 1, transform: 'scale(1)' },
+          ],
+          { duration: REVEAL_DURATION_MS, delay: i * REVEAL_STAGGER_MS, easing: REVEAL_EASING, fill: 'backwards' },
+        )
+      })
+    })
+
+    // Skip to the end if the tab is hidden mid-reveal.
+    const onVisibility = () => {
+      if (document.hidden) {
+        cancelled = true
+        showNow()
+      }
+    }
+    document.addEventListener('visibilitychange', onVisibility)
+
+    return () => {
+      cancelled = true
+      document.removeEventListener('visibilitychange', onVisibility)
+      showNow()
+    }
+  }, [animate])
+
+  const lineRef = (i) => (el) => {
+    lineRefs.current[i] = el
+  }
+
   return (
     <section className={styles.hero}>
       {SHOW_LANDING_STICKERS && <HeroStickers />}
 
       <div className={styles.content}>
-        <h1>Niki Taradash</h1>
+        <h1 ref={lineRef(0)} className={styles.line}>
+          Niki Taradash
+        </h1>
 
         <p className="accent-1">
-          Design student @ Boston University
-          <br />
-          Currently product design intern @ Bendi Wellness
+          <span ref={lineRef(1)} className={styles.line}>
+            Design student @ Boston University
+          </span>
+          <span ref={lineRef(2)} className={styles.line}>
+            Currently product design intern @ Bendi Wellness
+          </span>
         </p>
       </div>
     </section>

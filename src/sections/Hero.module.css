@@ -3,6 +3,12 @@
   padding: 10rem var(--page-gutter) 8.5rem;
 }
 
+/* Each revealed line (see Hero.jsx) scales from its own center. */
+.line {
+  display: block;
+  transform-origin: center;
+}
+
 .content {
   position: relative;
   z-index: 1;
