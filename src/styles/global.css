@@ -46,6 +46,21 @@ html.cursor-hidden * {
   cursor: none !important;
 }
 
+/* Draggable items ([data-grab], e.g. the About envelope's clover/polaroid)
+   show the native grab hand instead of the custom dot, and everything shows
+   "grabbing" mid-drag (html.is-grabbing). CursorEffects hides the dot then. */
+html.cursor-hidden [data-grab],
+html.cursor-hidden [data-grab] * {
+  cursor: grab !important;
+}
+
+html.is-grabbing,
+html.is-grabbing *,
+html.is-grabbing [data-grab],
+html.is-grabbing [data-grab] * {
+  cursor: grabbing !important;
+}
+
 #root {
   min-height: 100vh;
 }
@@ -137,4 +152,15 @@ img,
 svg {
   display: block;
   max-width: 100%;
+}
+
+/* Media deterrents (see useMediaProtection): no native image dragging, no
+   selection highlight, no iOS long-press "Save image". Text stays
+   selectable. */
+img,
+video {
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
 }

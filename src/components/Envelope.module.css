@@ -1,9 +1,18 @@
+/* Sized by the parent (About.module.css); holds the envelope and the
+   "put back" button under it. */
+.wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 /* Aspect ratio of the full composition (all four layers' combined bounds).
    Every layer below is positioned in % of this box, so they scale together
-   and can't drift apart. No overflow: hidden — the lifted clover/polaroid
-   need to be able to rise past the top edge. */
+   and can't drift apart. No overflow: hidden — the clover/polaroid rise
+   past the top edge on hover and can be dragged anywhere. */
 .envelope {
   position: relative;
+  width: 100%;
   aspect-ratio: 674.9 / 706.6;
 }
 
@@ -12,9 +21,12 @@
   display: block;
   height: auto;
   max-width: none;
-  transform: translateY(var(--lift, 0)) rotate(var(--rotate, 0deg));
-  user-select: none;
-  -webkit-user-drag: none;
+}
+
+/* Envelope back and front pocket: decoration only, never interactive. */
+.back,
+.front {
+  pointer-events: none;
 }
 
 .back {
@@ -23,10 +35,17 @@
   width: 99.85%;
 }
 
+.front {
+  left: 0.05%;
+  top: 43.78%;
+  width: 99.9%;
+}
+
 .clover {
   left: 4.78%;
   top: 9.96%;
   width: 71.56%;
+  --hover-lift: -16px;
 }
 
 .polaroid {
@@ -34,122 +53,140 @@
   top: 37.95%;
   width: 32.68%;
   --rotate: -12.5deg;
+  --hover-lift: -20px;
 }
 
-.front {
-  left: 0.05%;
-  top: 43.78%;
-  width: 99.9%;
-  pointer-events: none;
-}
-
-/* The clover and polaroid are buttons (click to enlarge). */
+/* Draggable clover/polaroid. GSAP Draggable moves .item (x/y) and sets its
+   z-index when picked up; .lift carries the hover slide and the item's
+   resting tilt; the image carries the held scale/tilt and the shadow. */
 .item {
-  padding: 0;
-  border: none;
-  background: none;
-  cursor: zoom-in;
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
-.item img {
+.lift {
+  transform: translateY(var(--lift, 0)) rotate(var(--rotate, 0deg));
+}
+
+.itemImage {
   display: block;
   width: 100%;
   height: auto;
+  transition: filter 0.2s ease;
 }
 
-.item:focus-visible {
-  outline: 2px solid var(--color-accent-blue);
-  outline-offset: 4px;
+.item[data-dragging] .itemImage {
+  filter: drop-shadow(0 14px 18px rgba(0, 0, 0, 0.18));
 }
 
 /* Desktop hover: the clover, then the polaroid, slide up out of the pocket.
    Mouse/trackpad only, above the mobile breakpoint, and never with reduced
-   motion — everywhere else the layers just stay put. */
+   motion. Once an item has been dragged out (.out) it no longer reacts to
+   hover — it just keeps the lifted offset it had when it was picked up. */
 @media (hover: hover) and (pointer: fine) and (min-width: 721px) and (prefers-reduced-motion: no-preference) {
-  .clover,
-  .polaroid {
+  .lift {
     transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
     will-change: transform;
   }
 
-  .polaroid {
+  .polaroid .lift {
     transition-delay: 0.06s;
   }
 
-  .envelope:hover .clover {
-    --lift: -16px;
-  }
-
-  .envelope:hover .polaroid {
-    --lift: -20px;
-  }
-}
-
-/* Enlarged view: covers the page (above the nav), click anywhere or press
-   Esc to close. */
-.overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 1000;
-  display: grid;
-  place-items: center;
-  padding: 4rem var(--page-gutter);
-  background: color-mix(in srgb, var(--color-bg) 85%, transparent);
-  -webkit-backdrop-filter: var(--glass-blur);
-  backdrop-filter: var(--glass-blur);
-  cursor: zoom-out;
-  animation: overlay-in 0.25s ease-out;
-}
-
-.enlarged {
-  max-width: 100%;
-  max-height: 100%;
-  animation: enlarge-in 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.cloverEnlarged {
-  width: min(640px, 80vh);
-}
-
-.polaroidEnlarged {
-  height: min(720px, 85vh);
-  width: auto;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
-}
-
-.close {
-  position: absolute;
-  top: 1.5rem;
-  right: var(--page-gutter);
-  padding: 0.5rem 0;
-  border: none;
-  background: none;
-  color: var(--color-text);
-  font: inherit;
-  cursor: pointer;
-}
-
-.close:hover {
-  text-decoration: underline;
-  text-underline-offset: 4px;
-}
-
-@keyframes overlay-in {
-  from {
-    opacity: 0;
-  }
-}
-
-@keyframes enlarge-in {
-  from {
-    opacity: 0;
-    transform: scale(0.85);
+  .envelope:hover .lift,
+  .out .lift {
+    --lift: var(--hover-lift);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .overlay,
-  .enlarged {
-    animation: none;
+  .itemImage {
+    transition: none;
   }
+}
+
+/* "click and drag" / "tap and drag" hint — same bubble look as the
+   draggable stickers, set in Tchig Mono at Accent 2. */
+.bubble {
+  position: absolute;
+  left: 50%;
+  bottom: 100%;
+  z-index: 1;
+  width: max-content;
+  margin-bottom: 1.5rem;
+  padding: 0.45rem 0.85rem;
+  border: 1.5px solid #000;
+  border-radius: 14px;
+  background: #fff;
+  color: #000;
+  font-family: var(--font-family-accent);
+  font-size: var(--font-size-accent-2);
+  line-height: var(--line-height-accent-2);
+  letter-spacing: var(--letter-spacing-accent-2);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 6px) scale(0.9);
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.bubble::before,
+.bubble::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  transform: translateX(-50%);
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-top: 7px solid #000;
+}
+
+.bubble::after {
+  margin-top: -2px;
+  border-left-width: 5.5px;
+  border-right-width: 5.5px;
+  border-top: 5.5px solid #fff;
+}
+
+.bubbleVisible {
+  opacity: 1;
+  transform: translate(-50%, 0) scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bubble {
+    transition: none;
+  }
+}
+
+/* Only shown once something's been dragged out; keeps its space so the
+   page doesn't shift when it appears. */
+.putBack {
+  margin-top: 1rem;
+  padding: 0.25rem 0;
+  border: none;
+  background: none;
+  color: var(--color-text);
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  cursor: pointer;
+}
+
+.putBackVisible {
+  visibility: visible;
+  opacity: 1;
+}
+
+.putBack:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.putBack:focus-visible {
+  outline: 2px solid var(--color-accent-blue);
+  outline-offset: 3px;
 }

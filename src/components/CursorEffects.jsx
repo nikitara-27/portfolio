@@ -16,8 +16,16 @@ function CursorEffects() {
 
     document.documentElement.classList.add('cursor-hidden')
 
+    // Hidden over draggable items and mid-drag, where the native grab/
+    // grabbing hand shows instead (see [data-grab] in global.css).
+    let dotHidden = false
     const onMove = (e) => {
       target = { x: e.clientX, y: e.clientY }
+      const hide = !!e.target.closest?.('[data-grab]') || document.documentElement.classList.contains('is-grabbing')
+      if (hide !== dotHidden && dotRef.current) {
+        dotHidden = hide
+        dotRef.current.style.opacity = hide ? '0' : ''
+      }
     }
     window.addEventListener('pointermove', onMove)
 
