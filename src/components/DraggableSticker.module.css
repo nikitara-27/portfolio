@@ -43,7 +43,7 @@
   color: #000;
   font-family: var(--font-family);
   font-weight: var(--font-weight-normal);
-  font-size: var(--font-size-sticker-bubble);
+  font-size: var(--font-size-body-sm);
   /* pre-line (not nowrap) so an explicit "\n" in bubbleText — see mango/
      camera in Hero.jsx — actually breaks onto a second line; text without
      one still renders on a single line exactly as before, since nothing

@@ -1,38 +1,26 @@
+/* Starts with the full-width rule under the hero, then the card grid. */
 .section {
-  position: relative;
-  background: var(--color-bg);
-  padding: 120px 2rem;
+  margin: 0 var(--page-gutter);
+  padding: 2.25rem 0 9rem;
+  border-top: 1px solid var(--color-rule);
 }
 
-.inner {
-  max-width: 1240px;
-  margin: 0 auto;
-}
-
-.heading {
-  margin-bottom: 3rem;
-}
-
+/* Pulled out by WorkCard's own padding + border (0.75rem + 2px) so the
+   card images line up with the rules and page gutters. */
 .grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 3rem 2.75rem;
+  gap: 2rem 1.75rem;
+  margin: 0 -0.875rem;
 }
 
 @media (max-width: 720px) {
+  .section {
+    padding: 0.75rem 0 4.5rem;
+  }
+
   .grid {
     grid-template-columns: 1fr;
-    gap: 1.25rem;
+    gap: 1rem;
   }
-}
-
-.placeholder {
-  background: var(--color-divider);
-  border-radius: 12px;
-  /* .card itself has no single aspect-ratio anymore (image + a naturally-
-     sized text block below it, see WorkCard.module.css) — matches just
-     .image's own ratio instead, the closest reasonable stand-in. Currently
-     unused (PROJECTS has no null entries to fill this), kept for whenever
-     a future odd project count needs a filler in the grid's last row. */
-  aspect-ratio: 3 / 2;
 }

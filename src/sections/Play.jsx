@@ -183,7 +183,7 @@ function PlayEntry({ tag, title, images, cat = false }) {
       {cat && <PlayCornerCat />}
       <AccordionRow images={images} />
       <div className={styles.entryMeta}>
-        <span className={`${styles.tag} body-m`}>{tag}</span>
+        <span className={`${styles.tag} body-sm`}>{tag}</span>
         <h3 className={styles.entryTitle}>{title}</h3>
       </div>
     </div>

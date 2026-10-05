@@ -1,7 +1,6 @@
-/* Standard sticky bar, edge-to-edge — desktop/tablet. Frosted-glass: a
-   light, semi-transparent white tint plus a blur so it reads as glass
-   rather than a plain tinted overlay, while page content stays visible
-   (softened) scrolling behind it. */
+/* Sticky bar, edge-to-edge. Frosted glass: translucent white plus a blur,
+   so content scrolling beneath stays visible but softened enough that the
+   nav text stays readable. */
 .nav {
   position: fixed;
   top: 0;
@@ -12,10 +11,10 @@
   align-items: center;
   justify-content: space-between;
   gap: 1.5rem;
-  padding: 1rem 2rem;
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  padding: 1.25rem var(--page-gutter);
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
 }
 
 .left {
@@ -44,7 +43,7 @@
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  background: #f5f1ea;
+  background: var(--color-divider);
   flex-shrink: 0;
   display: flex;
   align-items: center;
@@ -71,8 +70,8 @@
    use), the only cue that it's clickable (no pill, unlike Work/Play/About). */
 .wordmark {
   font-family: var(--font-family);
-  font-weight: var(--font-weight-semibold);
-  font-size: var(--font-size-h4);
+  font-weight: var(--font-weight-normal);
+  font-size: var(--font-size-body);
   color: var(--color-text);
   white-space: nowrap;
   transition: color 0.18s ease;
@@ -90,8 +89,8 @@
 
 .link {
   font-family: var(--font-family);
-  font-weight: var(--font-weight-semibold);
-  font-size: var(--font-size-h4);
+  font-weight: var(--font-weight-normal);
+  font-size: var(--font-size-body);
   color: var(--color-text);
   text-decoration: none;
   padding: 0.25rem 0.6rem;
@@ -231,9 +230,8 @@
 
   /* Full-screen overlay instead of a dropdown — position: fixed + inset: 0
      covers the header too. z-index: 9 sits below .hamburger's 11, so the
-     X stays visible and clickable on top of it. Light-opacity tan glass
-     — .mobileLink/.mobileLinkActive's dark text needs to stay readable
-     over it, not stand out against a solid fill. */
+     X stays visible and clickable on top of it. Same frosted glass as the
+     bar itself. */
   .mobileMenu {
     display: flex;
     flex-direction: column;
@@ -243,9 +241,9 @@
     inset: 0;
     z-index: 9;
     gap: 1rem;
-    background: rgba(var(--color-muted-rgb), 0.15);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    background: var(--glass-bg);
+    -webkit-backdrop-filter: var(--glass-blur);
+    backdrop-filter: var(--glass-blur);
     opacity: 0;
     transform: scale(0.96);
     pointer-events: none;
@@ -262,8 +260,8 @@
 
   .mobileLink {
     font-family: var(--font-family);
-    font-weight: var(--font-weight-semibold);
-    font-size: var(--font-size-h3);
+    font-weight: var(--font-weight-normal);
+    font-size: var(--font-size-h5);
     color: var(--color-text);
     text-decoration: none;
     padding: 0.85rem 0;

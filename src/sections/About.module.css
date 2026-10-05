@@ -1,87 +1,103 @@
 .about {
   position: relative;
-  background: var(--color-bg);
-  padding: 150px 2rem 120px;
+  padding: 8rem var(--page-gutter) 8rem;
 }
 
-.inner {
-  max-width: 900px;
-  margin: 0 auto;
-}
-
+/* h1 for the page outline, set at the H2 size. */
 .title {
-  text-align: left;
+  font-size: var(--font-size-h2);
+  line-height: var(--line-height-h2);
+  letter-spacing: var(--letter-spacing-h2);
   margin-bottom: 3rem;
 }
 
+/* Envelope (~55%) and bio (~40%), vertically centered with each other. */
 .intro {
+  display: grid;
+  grid-template-columns: 55fr 40fr;
+  column-gap: 5%;
+  align-items: center;
+}
+
+.envelopeColumn {
   display: flex;
-  align-items: flex-start;
-  gap: 3rem;
-  margin-bottom: 4.5rem;
+  justify-content: center;
+  /* Headroom so the lifted clover/polaroid clear the title on hover. */
+  padding-top: 2rem;
 }
 
-.photoFrame {
-  width: 280px;
-  height: 380px;
-  border-radius: 8px;
-  overflow: hidden;
-  flex-shrink: 0;
-  background: var(--color-divider);
-}
-
-@media (max-width: 1024px) {
-  .photoFrame {
-    width: 200px;
-    height: 271px;
-  }
-}
-
-@media (max-width: 720px) {
-  .intro {
-    flex-direction: column;
-    gap: 1.5rem;
-    margin-bottom: 1.25rem;
-  }
-
-  .photoFrame {
-    width: 160px;
-    height: 217px;
-  }
-
-  .introText {
-    padding-top: 0;
-  }
-}
-
-.photo {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.envelope {
+  width: min(75%, 560px);
 }
 
 .introText {
   display: flex;
   flex-direction: column;
-  gap: 0.85rem;
-  padding-top: 0.5rem;
+  gap: 1.5rem;
+  max-width: 32rem;
 }
 
 .greeting {
-  margin: 0;
+  font-size: var(--font-size-body-lg);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-body);
+  letter-spacing: normal;
 }
 
 .body {
-  line-height: 1.6;
-  max-width: 46ch;
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+}
+
+/* Starts the next part of the page, below the envelope and bio. */
+.journeyTitle {
+  margin-top: 7rem;
+  font-size: var(--font-size-h4);
+  line-height: var(--line-height-h4);
+  letter-spacing: var(--letter-spacing-h4);
+}
+
+@media (max-width: 720px) {
+  .about {
+    padding: 6rem var(--page-gutter) 4.5rem;
+  }
+
+  .title {
+    margin-bottom: 1.5rem;
+  }
+
+  .journeyTitle {
+    margin-top: 4rem;
+  }
+
+  .intro {
+    grid-template-columns: 1fr;
+    row-gap: 2.5rem;
+  }
+
+  .envelopeColumn {
+    padding-top: 0;
+  }
+
+  .envelope {
+    width: 60%;
+  }
+
+  .introText {
+    gap: 1rem;
+    max-width: none;
+  }
 }
 
 .resumeButton {
   display: inline-flex;
+  align-self: flex-start;
+  margin-top: 0.5rem;
   align-items: center;
   gap: 0.5rem;
-  background: var(--color-accent-green);
+  background: var(--color-accent-blue);
   color: #ffffff;
+  font-weight: var(--font-weight-semibold);
   padding: 0.75rem 1.5rem;
   border-radius: 999px;
   text-decoration: none;
@@ -91,95 +107,17 @@
 }
 
 .resumeButton:hover {
-  background: var(--color-accent-green-hover);
+  background: color-mix(in srgb, var(--color-accent-blue) 85%, black);
   transform: translateY(-3px);
 }
 
-.resumeButtonStandalone {
-  display: none;
+.resumeButton:focus-visible {
+  outline: 2px solid var(--color-accent-blue);
+  outline-offset: 3px;
 }
 
 .resumeButtonArrow {
   width: 1em;
   height: 1em;
   flex-shrink: 0;
-}
-
-@media (max-width: 720px) {
-  .resumeButtonInline {
-    display: none;
-  }
-
-  .resumeButtonStandalone {
-    display: inline-flex;
-    margin-bottom: 2.5rem;
-  }
-}
-
-.entrySection {
-  margin-bottom: 4.5rem;
-}
-
-.entrySectionHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 2rem;
-}
-
-.entrySectionTitle {
-  margin: 0;
-}
-
-/* Experience's own text-only entries (no logo, see ExperienceEntry in
-   About.jsx) — the only entry list left on this page now that Education/
-   Certificates are gone. A generous gap: with no logo to anchor each row,
-   entries need a bit more room of their own to still read as separate
-   blocks rather than one run of text. */
-.experienceList {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-}
-
-.experienceEntry {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.experienceTitle {
-  margin: 0;
-  color: var(--color-text);
-}
-
-.experienceDate {
-  margin: 0;
-  color: var(--color-muted);
-}
-
-.factsTitle {
-  text-align: center;
-  margin: 0 0 4rem;
-}
-
-.facts {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 3rem;
-  flex-wrap: wrap;
-}
-
-.factIcon {
-  width: 180px;
-  height: auto;
-}
-
-@media (max-width: 720px) {
-  .factsTitle,
-  .facts {
-    display: none;
-  }
 }

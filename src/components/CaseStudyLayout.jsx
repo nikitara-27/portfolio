@@ -381,7 +381,7 @@ function CaseStudyLayout({ eyebrow, title, meta, links, sections, heroImage, her
                         {project.team && <span className={workCardStyles.team}>Team</span>}
                       </div>
                       <h3 className={styles.nextUpTitle}>{project.title}</h3>
-                      <p className={`${styles.nextUpDescription} body-s`}>
+                      <p className={`${styles.nextUpDescription} body-sm`}>
                         {project.descriptionLines[0]}
                         <br />
                         {project.descriptionLines[1]}

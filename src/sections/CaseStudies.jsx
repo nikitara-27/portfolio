@@ -58,20 +58,12 @@ export const PROJECTS = [
 function CaseStudies() {
   return (
     <section id="case-studies" className={styles.section}>
-      <div className={styles.inner}>
-        <h1 className={styles.heading}>Case Studies</h1>
-
-        <div className={styles.grid}>
-          {PROJECTS.map((project, index) =>
-            project ? (
-              // Whichever project sits first in the grid's top row is the
-              // only one worth prioritizing over the rest of the page.
-              <WorkCard key={project.title} project={project} priority={index === 0} />
-            ) : (
-              <div key={`placeholder-${index}`} className={styles.placeholder} aria-hidden="true" />
-            ),
-          )}
-        </div>
+      <div className={styles.grid}>
+        {PROJECTS.map((project, index) => (
+          // Whichever project sits first in the grid's top row is the only
+          // one worth prioritizing over the rest of the page.
+          <WorkCard key={project.href} project={project} priority={index === 0} />
+        ))}
       </div>
     </section>
   )

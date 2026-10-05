@@ -19,7 +19,7 @@ body {
   font-family: var(--font-family-body);
   font-weight: var(--font-weight-normal);
   font-size: var(--font-size-body);
-  line-height: 1.5;
+  line-height: var(--line-height-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -46,6 +46,21 @@ html.cursor-hidden * {
   cursor: none !important;
 }
 
+/* Draggable items ([data-grab], e.g. the About envelope's clover/polaroid)
+   show the native grab hand instead of the custom dot, and everything shows
+   "grabbing" mid-drag (html.is-grabbing). CursorEffects hides the dot then. */
+html.cursor-hidden [data-grab],
+html.cursor-hidden [data-grab] * {
+  cursor: grab !important;
+}
+
+html.is-grabbing,
+html.is-grabbing *,
+html.is-grabbing [data-grab],
+html.is-grabbing [data-grab] * {
+  cursor: grabbing !important;
+}
+
 #root {
   min-height: 100vh;
 }
@@ -53,7 +68,8 @@ html.cursor-hidden * {
 h1,
 h2,
 h3,
-h4 {
+h4,
+h5 {
   margin: 0;
   font-family: var(--font-family);
   font-weight: var(--font-weight-normal);
@@ -61,48 +77,90 @@ h4 {
 
 h1 {
   font-size: var(--font-size-h1);
+  line-height: var(--line-height-h1);
+  letter-spacing: var(--letter-spacing-h1);
 }
 
 h2 {
   font-size: var(--font-size-h2);
+  line-height: var(--line-height-h2);
+  letter-spacing: var(--letter-spacing-h2);
 }
 
 h3 {
   font-size: var(--font-size-h3);
-  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-h3);
+  letter-spacing: var(--letter-spacing-h3);
 }
 
 h4 {
   font-size: var(--font-size-h4);
-  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-h4);
+  letter-spacing: var(--letter-spacing-h4);
+}
+
+h5 {
+  font-size: var(--font-size-h5);
+  line-height: var(--line-height-h5);
 }
 
 p {
   margin: 0;
   font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
 }
 
-.body-m {
-  font-family: var(--font-family-body);
+/* Body sizes (Body Medium is the default for body and p). */
+.body-lg {
+  font-size: var(--font-size-body-lg);
+  line-height: var(--line-height-body);
+}
+
+.body-sm {
+  font-size: var(--font-size-body-sm);
+  line-height: var(--line-height-body);
+}
+
+/* Tchig Mono accents. */
+.accent-1,
+.accent-2 {
+  font-family: var(--font-family-accent);
   font-weight: var(--font-weight-normal);
-  font-size: var(--font-size-body-m);
 }
 
-.body-s {
-  font-family: var(--font-family-body);
-  font-weight: var(--font-weight-normal);
-  font-size: var(--font-size-body-s);
+.accent-1 {
+  font-size: var(--font-size-accent-1);
+  line-height: var(--line-height-accent-1);
 }
 
+.accent-2 {
+  font-size: var(--font-size-accent-2);
+  line-height: var(--line-height-accent-2);
+  letter-spacing: var(--letter-spacing-accent-2);
+}
+
+/* Pull quotes on the case study pages: Body Large, semibold italic. */
 .body-italic {
   font-family: var(--font-family-body);
   font-weight: var(--font-weight-semibold);
   font-style: italic;
-  font-size: var(--font-size-body-italic);
+  font-size: var(--font-size-body-lg);
+  line-height: var(--line-height-body);
 }
 
 img,
 svg {
   display: block;
   max-width: 100%;
+}
+
+/* Media deterrents (see useMediaProtection): no native image dragging, no
+   selection highlight, no iOS long-press "Save image". Text stays
+   selectable. */
+img,
+video {
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
 }

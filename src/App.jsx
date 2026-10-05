@@ -4,6 +4,8 @@ import Nav from './components/Nav'
 import ScrollToTop from './components/ScrollToTop'
 import SmoothScroll from './components/SmoothScroll'
 import CursorEffects from './components/CursorEffects'
+import { SHOW_CUSTOM_CURSOR } from './config/features'
+import { useMediaProtection } from './hooks/useMediaProtection'
 import Landing from './sections/Landing'
 import About from './sections/About'
 import Play from './sections/Play'
@@ -13,11 +15,12 @@ import ImmigrationEnforcementReporterCaseStudy from './pages/ImmigrationEnforcem
 
 function App() {
   const [homeKey, setHomeKey] = useState(0)
+  useMediaProtection()
 
   return (
     <>
       <SmoothScroll />
-      <CursorEffects />
+      {SHOW_CUSTOM_CURSOR && <CursorEffects />}
       <ScrollToTop />
       <Nav onHomeClick={() => setHomeKey((key) => key + 1)} />
       <Routes>

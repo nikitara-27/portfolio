@@ -1,68 +1,80 @@
 :root {
   /* Color palette */
-  --color-bg: #ffffff;
+  --color-bg: #f5f1ea;
   --color-text: #000000;
   --color-muted: #8a806e;
-  /* Same color as --color-muted, as separate r/g/b components — needed
-     wherever it's used at a fractional alpha (rgba()/color-mix() can't take
-     a hex custom property and vary its opacity), e.g. Nav's mobile-menu
-     background. */
-  --color-muted-rgb: 138, 128, 110;
+  /* Light fill (hover pills, placeholders) — not the divider rules, which
+     use --color-rule below. */
   --color-divider: #ded9d1;
+  /* Thin 1px horizontal rules between landing-page sections. */
+  --color-rule: #8a8a8a;
+  --color-placeholder: #d9d9d9;
+  /* Accent blue — experience role text and the footer background. */
+  --color-accent-blue: #1975ff;
+  /* Sunlit footer — blue background with navy text. */
+  --color-footer-bg: var(--color-accent-blue);
+  --color-footer-ink: #1d2951;
   --color-accent-green: #425c2f;
   --color-accent-green-hover: #607d4b;
 
-  /* Type family */
-  --font-family: 'Montserrat', sans-serif;
-  --font-family-body: 'Open Sans', sans-serif;
-  --font-weight-normal: 400;
+  /* Type family — Manrope (Google Fonts) for headers and body, Tchig Mono
+     (Adobe Fonts kit, see index.html) as the accent face. */
+  --font-family: 'Manrope', sans-serif;
+  --font-family-body: 'Manrope', sans-serif;
+  --font-family-accent: 'tchig-mono', monospace;
+  --font-weight-normal: 500;
   --font-weight-semibold: 600;
+  --font-weight-bold: 700;
 
-  /* Type scale */
-  --font-size-h1: 3rem; /* 48px */
-  --font-size-h2: 1.5rem; /* 24px */
-  --font-size-h3: 1.125rem; /* 18px */
-  --font-size-h4: 0.9375rem; /* 15px */
-  --font-size-body: 1rem; /* 16px */
-  --font-size-body-m: 0.75rem; /* 12px */
-  --font-size-body-s: 0.625rem; /* 10px */
-  --font-size-body-italic: 1.25rem; /* 20px */
+  /* Type scale — desktop. Each level has a size, line height, and (where
+     set) letter spacing; mobile sizes are below. Manrope Medium for H1–H5
+     and body, Tchig Mono for the accents. */
+  --font-size-h1: 3.25rem; /* 52px */
+  --line-height-h1: 1.1;
+  --letter-spacing-h1: -0.02em;
+  --font-size-h2: 2.5rem; /* 40px */
+  --line-height-h2: 1.15;
+  --letter-spacing-h2: -0.015em;
+  --font-size-h3: 2rem; /* 32px */
+  --line-height-h3: 1.2;
+  --letter-spacing-h3: -0.01em;
+  --font-size-h4: 1.5rem; /* 24px */
+  --line-height-h4: 1.25;
+  --letter-spacing-h4: -0.005em;
+  --font-size-h5: 1.25rem; /* 20px */
+  --line-height-h5: 1.3;
+  --font-size-body-lg: 1.125rem; /* 18px — Body Large */
+  --font-size-body: 1rem; /* 16px — Body Medium */
+  --font-size-body-sm: 0.875rem; /* 14px — Body Small */
+  --line-height-body: 1.5;
+  --font-size-accent-1: 1.25rem; /* 20px, Tchig Mono */
+  --line-height-accent-1: 1.4;
+  --font-size-accent-2: 0.875rem; /* 14px, Tchig Mono */
+  --line-height-accent-2: 1.4;
+  --letter-spacing-accent-2: 0.02em;
 
-  /* One-off decorative sizes, kept as tokens rather than inline values even
-     though they aren't part of the shared type scale above. */
-  --font-size-sticker-bubble: 0.9rem; /* 14.4px */
+  /* Frosted glass — the nav bar and mobile menu: the page background at
+     50% opacity, plus a blur. */
+  --glass-bg: color-mix(in srgb, var(--color-bg) 50%, transparent);
+  --glass-blur: blur(14px);
+
+  /* Page layout — left/right gutter shared by the nav and landing sections. */
+  --page-gutter: 4rem; /* 64px */
 }
 
-/* Tablet type scale — desktop sizes above scale down at this breakpoint;
-   body/body-m/body-s are unchanged so they're omitted here. Applied as a
-   ceiling (max-width) rather than a min/max range so narrower (mobile)
-   viewports inherit it too, instead of falling back to full desktop-size
-   headers below 768px. */
-@media (max-width: 1024px) {
-  :root {
-    --font-size-h1: 2.25rem; /* 36px */
-    --font-size-h2: 1.25rem; /* 20px */
-    --font-size-h3: 1rem; /* 16px */
-    --font-size-h4: 0.875rem; /* 14px */
-    --font-size-body-italic: 1.125rem; /* 18px */
-  }
-}
-
-/* Mobile type scale — scales down further from the tablet values above.
-   body/body-m are unchanged so they're omitted; body-s is the one
-   exception that goes up (10px tablet → 11px mobile), not down. Matches
-   the codebase's existing mobile breakpoint (720px, e.g. Footer/Hero/
-   WorkCard's own @media blocks) rather than introducing a new one — as a
-   subset of the ≤1024px tablet range above and declared after it, this
-   naturally wins the cascade at mobile widths without needing higher
-   specificity. */
+/* Mobile type scale — the codebase's mobile breakpoint (720px). */
 @media (max-width: 720px) {
   :root {
-    --font-size-h1: 1.75rem; /* 28px */
-    --font-size-h2: 1.125rem; /* 18px */
-    --font-size-h3: 0.9375rem; /* 15px */
-    --font-size-h4: 0.8125rem; /* 13px */
-    --font-size-body-italic: 1rem; /* 16px */
-    --font-size-body-s: 0.6875rem; /* 11px */
+    --font-size-h1: 2.375rem; /* 38px */
+    --font-size-h2: 2rem; /* 32px */
+    --font-size-h3: 1.625rem; /* 26px */
+    --font-size-h4: 1.3125rem; /* 21px */
+    --font-size-h5: 1.125rem; /* 18px */
+    --font-size-body-lg: 1.0625rem; /* 17px */
+    --font-size-body: 0.9375rem; /* 15px */
+    --font-size-body-sm: 0.8125rem; /* 13px */
+    --font-size-accent-1: 1rem; /* 16px */
+    --font-size-accent-2: 0.8125rem; /* 13px */
+    --page-gutter: 1.25rem; /* 20px */
   }
 }

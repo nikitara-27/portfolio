@@ -1,0 +1,192 @@
+/* Sized by the parent (About.module.css); holds the envelope and the
+   "put back" button under it. */
+.wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Aspect ratio of the full composition (all four layers' combined bounds).
+   Every layer below is positioned in % of this box, so they scale together
+   and can't drift apart. No overflow: hidden — the clover/polaroid rise
+   past the top edge on hover and can be dragged anywhere. */
+.envelope {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 674.9 / 706.6;
+}
+
+.layer {
+  position: absolute;
+  display: block;
+  height: auto;
+  max-width: none;
+}
+
+/* Envelope back and front pocket: decoration only, never interactive. */
+.back,
+.front {
+  pointer-events: none;
+}
+
+.back {
+  left: 0.1%;
+  top: 0;
+  width: 99.85%;
+}
+
+.front {
+  left: 0.05%;
+  top: 43.78%;
+  width: 99.9%;
+}
+
+.clover {
+  left: 4.78%;
+  top: 9.96%;
+  width: 71.56%;
+  --hover-lift: -16px;
+}
+
+.polaroid {
+  left: 48.14%;
+  top: 37.95%;
+  width: 32.68%;
+  --rotate: -12.5deg;
+  --hover-lift: -20px;
+}
+
+/* Draggable clover/polaroid. GSAP Draggable moves .item (x/y) and sets its
+   z-index when picked up; .lift carries the hover slide and the item's
+   resting tilt; the image carries the held scale/tilt and the shadow. */
+.item {
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.lift {
+  transform: translateY(var(--lift, 0)) rotate(var(--rotate, 0deg));
+}
+
+.itemImage {
+  display: block;
+  width: 100%;
+  height: auto;
+  transition: filter 0.2s ease;
+}
+
+.item[data-dragging] .itemImage {
+  filter: drop-shadow(0 14px 18px rgba(0, 0, 0, 0.18));
+}
+
+/* Desktop hover: the clover, then the polaroid, slide up out of the pocket.
+   Mouse/trackpad only, above the mobile breakpoint, and never with reduced
+   motion. Once an item has been dragged out (.out) it no longer reacts to
+   hover — it just keeps the lifted offset it had when it was picked up. */
+@media (hover: hover) and (pointer: fine) and (min-width: 721px) and (prefers-reduced-motion: no-preference) {
+  .lift {
+    transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform;
+  }
+
+  .polaroid .lift {
+    transition-delay: 0.06s;
+  }
+
+  .envelope:hover .lift,
+  .out .lift {
+    --lift: var(--hover-lift);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .itemImage {
+    transition: none;
+  }
+}
+
+/* "click and drag" / "tap and drag" hint — same bubble look as the
+   draggable stickers, set in Tchig Mono at Accent 2. */
+.bubble {
+  position: absolute;
+  left: 50%;
+  bottom: 100%;
+  z-index: 1;
+  width: max-content;
+  margin-bottom: 1.5rem;
+  padding: 0.45rem 0.85rem;
+  border: 1.5px solid #000;
+  border-radius: 14px;
+  background: #fff;
+  color: #000;
+  font-family: var(--font-family-accent);
+  font-size: var(--font-size-accent-2);
+  line-height: var(--line-height-accent-2);
+  letter-spacing: var(--letter-spacing-accent-2);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 6px) scale(0.9);
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.bubble::before,
+.bubble::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  transform: translateX(-50%);
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-top: 7px solid #000;
+}
+
+.bubble::after {
+  margin-top: -2px;
+  border-left-width: 5.5px;
+  border-right-width: 5.5px;
+  border-top: 5.5px solid #fff;
+}
+
+.bubbleVisible {
+  opacity: 1;
+  transform: translate(-50%, 0) scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bubble {
+    transition: none;
+  }
+}
+
+/* Only shown once something's been dragged out; keeps its space so the
+   page doesn't shift when it appears. */
+.putBack {
+  margin-top: 1rem;
+  padding: 0.25rem 0;
+  border: none;
+  background: none;
+  color: var(--color-text);
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  cursor: pointer;
+}
+
+.putBackVisible {
+  visibility: visible;
+  opacity: 1;
+}
+
+.putBack:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.putBack:focus-visible {
+  outline: 2px solid var(--color-accent-blue);
+  outline-offset: 3px;
+}
